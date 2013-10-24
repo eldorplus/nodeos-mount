@@ -1,6 +1,7 @@
 #include <sys/mount.h>
 #include <v8.h>
 #include <node.h>
+#include <iostream>
 
 v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   v8::HandleScope scope;
@@ -12,30 +13,29 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
 
   bool callback = false;
   v8::Local<v8::Function> cb;
-  v8::Local<v8::Array> options;
+  v8::Handle<v8::Array> options;
 
   if(args.Length() == 4) {
     callback = true;
     cb = v8::Local<v8::Function>::Cast(args[3]);
+    options = v8::Array::New(0);
   } else if(args.Length() == 5) {
     callback = true;
     cb = v8::Local<v8::Function>::Cast(args[4]);
     if (args[3]->IsArray()) {
-      v8::Handle<v8::Array> options = v8::Handle<v8::Array>::Cast(args[3]);
+      options = v8::Handle<v8::Array>::Cast(args[3]);
     }
   }
 
   int mask = 0;
-  if(options->Length() > 0) {
-    for (int i = 0; i < options->Length(); i++) {
-      v8::Local<v8::String> opt = v8::Local<v8::String>::Cast(options->Get(i));
-      if(opt == v8::String::New("bind")) {
-        mask = mask | MS_BIND;
-      } else if(opt == v8::String::New("readonly")) {
-        mask = mask | MS_RDONLY;
-      } else if(opt == v8::String::New("remount")) {
-        mask = mask | MS_REMOUNT;
-      }
+  for (unsigned int i = 0; i < options->Length(); i++) {
+    v8::Local<v8::String> opt = v8::Local<v8::String>::Cast(options->Get(i));
+    if(opt == v8::String::New("bind")) {
+      mask |= MS_BIND;
+    } else if(opt == v8::String::New("readonly")) {
+      mask |= MS_RDONLY;
+    } else if(opt == v8::String::New("remount")) {
+      mask |= MS_REMOUNT;
     }
   }
 
