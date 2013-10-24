@@ -8,10 +8,13 @@ Mount your device from node.js like what.
 
 ```javascript
 var mount = require('mount');
-mount.mount('tmpfs', 'tmpDir', 'tmpfs');
-// ... do some stuff in tmpDir
-mount.unmount('tmpDir');
-// BAH! everything from tmpDir is gone!
+mount.mount('tmpfs', 'tmpDir', 'tmpfs', function() {
+	// ... do some stuff in tmpDir
+});
+
+mount.unmount('tmpDir', function() {
+	// BAH! everything from tmpDir is gone!
+});
 ```
 
 ## Installation
