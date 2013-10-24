@@ -12,19 +12,39 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
 
   bool callback = false;
   v8::Local<v8::Function> cb;
+  v8::Local<v8::Array> options;
 
   if(args.Length() == 4) {
     callback = true;
     cb = v8::Local<v8::Function>::Cast(args[3]);
+  } else if(args.Length() == 5) {
+    callback = true;
+    cb = v8::Local<v8::Function>::Cast(args[4]);
+    if (args[3]->IsArray()) {
+      v8::Handle<v8::Array> options = v8::Handle<v8::Array>::Cast(args[3]);
+    }
   }
 
+  int mask = 0;
+  if(options->Length() > 0) {
+    for (int i = 0; i < options->Length(); i++) {
+      v8::Local<v8::String> opt = v8::Local<v8::String>::Cast(options->Get(i));
+      if(opt == v8::String::New("bind")) {
+        mask = mask | MS_BIND;
+      } else if(opt == v8::String::New("readonly")) {
+        mask = mask | MS_RDONLY;
+      } else if(opt == v8::String::New("remount")) {
+        mask = mask | MS_REMOUNT;
+      }
+    }
+  }
 
   v8::String::Utf8Value device(args[0]->ToString());
   v8::String::Utf8Value path(args[1]->ToString());
   v8::String::Utf8Value type(args[2]->ToString());
 
-  bool mountAction = (mount(*device, *path, *type, 0, NULL) == 0) ? true : false;
-  // TODO: expose flag values
+  bool mountAction = (mount(*device, *path, *type, mask, NULL) == 0) ? true : false;
+
   v8::Local<v8::Value> mounted = v8::Local<v8::Value>::New(v8::Boolean::New(mountAction));
 
   if(callback) {
