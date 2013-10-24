@@ -54,7 +54,7 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   return mounted;
 }
 
-v8::Handle<v8::Value> Umount(const v8::Arguments &args) {
+v8::Handle<v8::Value> Unmount(const v8::Arguments &args) {
   v8::HandleScope scope;
 
   if (args.Length() < 1) {
@@ -85,7 +85,7 @@ v8::Handle<v8::Value> Umount(const v8::Arguments &args) {
 
 void init (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> module) {
   exports->Set(v8::String::NewSymbol("mount"), v8::FunctionTemplate::New(Mount)->GetFunction());
-  exports->Set(v8::String::NewSymbol("umount"), v8::FunctionTemplate::New(Umount)->GetFunction());
+  exports->Set(v8::String::NewSymbol("unmount"), v8::FunctionTemplate::New(Unmount)->GetFunction());
 }
 NODE_MODULE(mount, init)
 
