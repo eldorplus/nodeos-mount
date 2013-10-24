@@ -7,7 +7,7 @@
     "linux",
     "device"
   ],
-  "version": "0.0.3",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "git://github.com/mmalecki/node-mount.git"
@@ -15,7 +15,5 @@
   "engines": {
     "node": ">= 0.4"
   },
-  "main": "./lib/mount",
-  "dependencies": {},
-  "devDependencies": {}
+  "main": "./lib/mount"
 }
