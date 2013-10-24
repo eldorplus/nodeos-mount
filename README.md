@@ -2,6 +2,14 @@
 
 Mount/unmount devices from node.js
 
+Really works on linux, may work on OS X, and will never work on windows.
+
+## Installation
+
+```
+npm install mnt
+```
+
 ## Usage
 
 ```javascript
@@ -13,9 +21,5 @@ mount.mount('tmpfs', 'tmpDir', 'tmpfs', function(success) {
 	});
 });
 ```
-
-## Installation
-
-    npm install http://github.com/stackdot/node-mount.git
 
 This module is forked from Maciej Małecki`s [repository]("https://github.com/mmalecki/node-mount"), but completely rewritten.
