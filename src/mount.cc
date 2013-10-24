@@ -9,8 +9,10 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
     // TODO: make it raise a proper exception
     return v8::ThrowException(v8::String::New("`mount` needs at least 3 parameters"));
   }
+
   bool callback = false;
   v8::Local<v8::Function> cb;
+
   if(args.Length() == 4) {
     callback = true;
     cb = v8::Local<v8::Function>::Cast(args[3]);
@@ -40,9 +42,26 @@ v8::Handle<v8::Value> Umount(const v8::Arguments &args) {
     return v8::ThrowException(v8::String::New("`umount` needs at least 1 parameter"));
   }
 
+  bool callback = false;
+  v8::Local<v8::Function> cb;
+  
+  if(args.Length() == 2) {
+    callback = true;
+    cb = v8::Local<v8::Function>::Cast(args[1]);
+  }
+
   v8::String::Utf8Value path(args[0]->ToString());
 
-  return (umount(*path) == 0) ? v8::True() : v8::False();
+  bool mountAction = (umount(*path) == 0) ? true : false;
+
+  v8::Local<v8::Value> mounted = v8::Local<v8::Value>::New(v8::Boolean::New(mountAction));
+
+  if(callback) {
+    const unsigned argc = 1;
+    v8::Local<v8::Value> argv[argc] = {mounted};
+    cb->Call(v8::Context::GetCurrent()->Global(), argc, argv);
+  }
+  return mounted;
 }
 
 void init (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> module) {
