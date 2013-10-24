@@ -1,6 +1,6 @@
 {
   "author": "Stackdot",
-  "name": "mount",
+  "name": "mnt",
   "description": "Mount/unmount system devices",
   "keywords": [
     "mount",
