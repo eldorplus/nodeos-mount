@@ -1,7 +1,6 @@
 #include <sys/mount.h>
 #include <v8.h>
 #include <node.h>
-#include <iostream>
 
 v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   v8::HandleScope scope;
