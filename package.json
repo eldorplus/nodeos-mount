@@ -15,9 +15,6 @@
   "engines": {
     "node": ">= 0.4"
   },
-  "scripts": {
-    "preinstall": "node-waf configure build"
-  },
   "main": "./lib/mount",
   "dependencies": {},
   "devDependencies": {}
