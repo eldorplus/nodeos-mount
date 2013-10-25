@@ -1,6 +1,9 @@
 #include <sys/mount.h>
 #include <v8.h>
 #include <node.h>
+#include <errno.h>
+#include <string.h>
+#include <iostream>
 
 v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   v8::HandleScope scope;
@@ -13,6 +16,7 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   bool callback = false;
   v8::Local<v8::Function> cb;
   v8::Handle<v8::Array> options;
+  v8::Local<v8::String> data;
 
   if(args.Length() == 4) {
     callback = true;
@@ -23,6 +27,15 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
     cb = v8::Local<v8::Function>::Cast(args[4]);
     if (args[3]->IsArray()) {
       options = v8::Handle<v8::Array>::Cast(args[3]);
+    }
+  } else if(args.Length() == 6) {
+    callback = true;
+    cb = v8::Local<v8::Function>::Cast(args[5]);
+    if (args[3]->IsArray()) {
+      options = v8::Handle<v8::Array>::Cast(args[3]);
+    }
+    if (args[4]->IsString()) {
+      data = v8::Local<v8::String>::Cast(args[4]);
     }
   }
 
@@ -42,7 +55,9 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   v8::String::Utf8Value path(args[1]->ToString());
   v8::String::Utf8Value type(args[2]->ToString());
 
-  bool mountAction = (mount(*device, *path, *type, mask, NULL) == 0) ? true : false;
+  int mountNum = mount(*device, *path, *type, mask, *data);
+  
+  bool mountAction = (mountNum == 0) ? true : false;
 
   v8::Local<v8::Value> mounted = v8::Local<v8::Value>::New(v8::Boolean::New(mountAction));
 
