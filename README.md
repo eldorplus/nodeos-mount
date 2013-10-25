@@ -22,4 +22,4 @@ mount.mount('tmpfs', 'tmpDir', 'tmpfs', function(success) {
 });
 ```
 
-This module is forked from Maciej Małecki`s [repository]("https://github.com/mmalecki/node-mount"), but completely rewritten.
+This module is forked from Maciej Małecki`s [repository](https://github.com/mmalecki/node-mount), but completely rewritten.
