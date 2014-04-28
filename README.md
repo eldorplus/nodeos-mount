@@ -28,10 +28,10 @@ file:
 
 ### mount
 ```javascript
-mount(devFile, mntPath, fsType, options, data)
+mount(devFile, target, fsType, options, data)
 ```
 - `devFile` - {String} Device-File being mounted (located in /dev)
-- `mntPath` - {String} Directory to mount the device to 
+- `target` - {String} Directory to mount the device to 
 - `options` - {Array.<String>} Array containing String options (see reference list)
 
 *options*
@@ -47,7 +47,7 @@ Following options are available:
 ```javascript
 umount(target)
 ```
-- `target` - {String} Mount-Path to umount (equivalent to `mntPath` of `mount`)
+- `target` - {String} Target path to umount (equivalent to `target` of `mount`)
 
 ## Usage
 
