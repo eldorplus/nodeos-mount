@@ -72,6 +72,13 @@ describe("mount", function(){
             }); 
         });
 
+        it("should mount tmpfs with flags", function(done){
+            mount.mount("tmpfs", TMP_DIR, "tmpfs", ["readonly"], function(err){
+                expect(err).to.be.not.ok;
+                done();
+            });
+        });
+
     });
 
     describe("#umount", function(){
