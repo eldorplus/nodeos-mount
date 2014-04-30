@@ -82,6 +82,9 @@ Handle<Value> Mount(const Arguments &args) {
             flags |= MS_REMOUNT;
         } else if(!strcmp(*str, "noexec")){
             flags |= MS_NOEXEC;
+        } else{
+            //return ThrowException(Exception::Error(String::New(strcat("Invalid option: ", *str))));
+            return ThrowException(Exception::Error(String::New("Invalid option")));
         }
     }
 

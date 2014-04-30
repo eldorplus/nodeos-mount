@@ -72,11 +72,19 @@ describe("mount", function(){
             }); 
         });
 
-        it("should mount tmpfs with flags", function(done){
-            mount.mount("tmpfs", TMP_DIR, "tmpfs", ["readonly"], function(err){
+        it("should mount / remount tmpfs with flags", function(done){
+            mount.mount("tmpfs", TMP_DIR, "tmpfs", ["readonly", "noexec"], function(err){
                 expect(err).to.be.not.ok;
-                done();
+
+                mount.mount("tmpfs", TMP_DIR, "tmpfs", ["remount"], function(err){
+                    expect(err).to.be.not.ok;  
+                    done();
+                });
             });
+        });
+
+        it("should throw error on wrong flag", function(){
+            expect(mount.mount.bind(mount, "tmpfs", TMP_DIR, ["readonly", "fail"])).to.throw(Error);
         });
 
     });
