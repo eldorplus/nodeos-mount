@@ -1,16 +1,33 @@
 {
-  "author": "Stackdot",
-  "name": "mnt",
-  "description": "Mount/unmount system devices",
+  "name": "mount",
+  "description": "Async mount / umount system devices",
+  "main": "./mount",
   "keywords": [
     "mount",
     "linux",
-    "device"
+    "device",
+    "async"
   ],
   "version": "0.0.4",
   "repository": {
     "type": "git",
-    "url": "git://github.com/stackdot/node-mount.git"
+    "url": "git://github.com/magicpat/node-mount.git"
   },
-  "main": "./lib/mount"
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "private": true,
+  "author": "Patrick Stapfer <p.stapfer@deadlock.at>",
+  "license": "MIT",
+  "gypfile": true,
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
+    "grunt": "~0.4.4",
+    "grunt-mocha-test": "~0.10.2",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-node-gyp": "~0.3.0",
+    "q": "~1.0.1"
+  }
 }

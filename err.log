@@ -1,0 +1,401 @@
+
+==== Stack trace ============================================
+
+Security context: 0x389438657281 <JS Object>#0#
+    1: /* anonymous */ [/development/playground/node-mount/test.js:8] (this=0x349aaef78d41 <an Object>#1#,exports=0x349aaef78d41 <an Object>#1#,require=0x349aaef7b199 <JS Function require>#2#,module=0x349aaef78c49 <a Module>#3#,__filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>,__dirname=0x349aaef7baf9 <String[34]: /development/playground/node-mount>)
+    3: _compile [module.js:456] (this=0x349aaef78c49 <a Module>#3#,content=0x349aaef7af51 <String[195]\: "use strict";\n\nvar mount = require("./lib/mount");\n\n\n//mount.mount();\n\nmount.mount("/dev/sr0", "tmpDir", "iso9660", ["readonly", "noexec"], function(err, success){\n    console.log(success); \n});\n>,filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>)
+    4: .js [module.js:474] (this=0x349aaef46699 <an Object>#4#,module=0x349aaef78c49 <a Module>#3#,filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>)
+    5: load [module.js:356] (this=0x349aaef78c49 <a Module>#3#,filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>)
+    6: _load [module.js:312] (this=0x349aaef460f9 <JS Function Module>#5#,request=0x349aaef41b31 <String[39]: /development/playground/node-mount/test>,parent=0x389438604101 <null>,isMain=0x389438604161 <true>)
+    7: runMain [module.js:497] (this=0x349aaef460f9 <JS Function Module>#5#)
+    8: startup [node.js:119] (this=0x3894386573a1 <JS Global Object>#6#)
+    9: /* anonymous */ [node.js:902] (this=0x3894386573a1 <JS Global Object>#6#,process=0x349aaef057e1 <a process>#7#)
+
+==== Details ================================================
+
+[1]: /* anonymous */ [/development/playground/node-mount/test.js:8] (this=0x349aaef78d41 <an Object>#1#,exports=0x349aaef78d41 <an Object>#1#,require=0x349aaef7b199 <JS Function require>#2#,module=0x349aaef78c49 <a Module>#3#,__filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>,__dirname=0x349aaef7baf9 <String[34]: /development/playground/node-mount>) {
+  // stack-allocated locals
+  var mount = 0x349aaef917a1 <an Object>#8#
+  // expression stack (top to bottom)
+  [07] : 0x389438682a81 <JS Function>#9#
+  [06] : 0x349aaef92fd1 <JS Function>#10#
+  [05] : 0x349aaef92fb1 <JS Array[2]>#11#
+  [04] : 0x35317672b3f1 <String[7]: iso9660>
+  [03] : 0x35317672b3d1 <String[6]: tmpDir>
+  [02] : 0x35317672b3b1 <String[8]: /dev/sr0>
+  [01] : 0x349aaef917a1 <an Object>#8#
+--------- s o u r c e   c o d e ---------
+function (exports, require, module, __filename, __dirname) { "use strict";??var mount = require("./lib/mount");???//mount.mount();??mount.mount("/dev/sr0", "tmpDir", "iso9660", ["readonly", "noexec"], function(err, success){?    console.log(success); ?});??}
+-----------------------------------------
+}
+
+[3]: _compile [module.js:456] (this=0x349aaef78c49 <a Module>#3#,content=0x349aaef7af51 <String[195]\: "use strict";\n\nvar mount = require("./lib/mount");\n\n\n//mount.mount();\n\nmount.mount("/dev/sr0", "tmpDir", "iso9660", ["readonly", "noexec"], function(err, success){\n    console.log(success); \n});\n>,filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>) {
+  // stack-allocated locals
+  var require = 0x349aaef7b199 <JS Function require>#2#
+  var dirname = 0x349aaef7baf9 <String[34]: /development/playground/node-mount>
+  var sandbox = 0x389438604121 <undefined>
+  var k = 0x389438604121 <undefined>
+  var wrapper = 0x349aaef7bb49 <String[261]\: (function (exports, require, module, __filename, __dirname) { "use strict";\n\nvar mount = require("./lib/mount");\n\n\n//mount.mount();\n\nmount.mount("/dev/sr0", "tmpDir", "iso9660", ["readonly", "noexec"], function(err, success){\n    console.log(success); \n});\n\n});>
+  var compiledWrapper = 0x349aaef7bcc1 <JS Function>#12#
+  var args = 0x349aaef7bd81 <JS Array[5]>#13#
+  // heap-allocated locals
+  var self = 0x349aaef78c49 <a Module>#3#
+  // expression stack (top to bottom)
+  [09] : 0x349aaef7bd81 <JS Array[5]>#13#
+  [08] : 0x349aaef78d41 <an Object>#1#
+  [07] : 0x349aaef7bcc1 <JS Function>#12#
+--------- s o u r c e   c o d e ---------
+function (content, filename) {?  var self = this;?  // remove shebang?  content = content.replace(/^\#\!.*/, '');??  function require(path) {?    return self.require(path);?  }??  require.resolve = function(request) {?    return Module._resolveFilename(request, self);?  };??  Object.defineProperty(require, '...
+
+-----------------------------------------
+}
+
+[4]: .js [module.js:474] (this=0x349aaef46699 <an Object>#4#,module=0x349aaef78c49 <a Module>#3#,filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>) {
+  // stack-allocated locals
+  var content = 0x349aaef7af51 <String[195]\: "use strict";\n\nvar mount = require("./lib/mount");\n\n\n//mount.mount();\n\nmount.mount("/dev/sr0", "tmpDir", "iso9660", ["readonly", "noexec"], function(err, success){\n    console.log(success); \n});\n>
+  // expression stack (top to bottom)
+  [03] : 0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>
+  [02] : 0x349aaef7af51 <String[195]\: "use strict";\n\nvar mount = require("./lib/mount");\n\n\n//mount.mount();\n\nmount.mount("/dev/sr0", "tmpDir", "iso9660", ["readonly", "noexec"], function(err, success){\n    console.log(success); \n});\n>
+  [01] : 0x349aaef78c49 <a Module>#3#
+--------- s o u r c e   c o d e ---------
+function (module, filename) {?  var content = NativeModule.require('fs').readFileSync(filename, 'utf8');?  module._compile(stripBOM(content), filename);?}
+-----------------------------------------
+}
+
+[5]: load [module.js:356] (this=0x349aaef78c49 <a Module>#3#,filename=0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>) {
+  // stack-allocated locals
+  var extension = 0x349aaef7a509 <String[3]: .js>
+  // expression stack (top to bottom)
+  [04] : 0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>
+  [03] : 0x349aaef78c49 <a Module>#3#
+  [02] : 0x349aaef46699 <an Object>#4#
+  [01] : 0x349aaef7a509 <String[3]: .js>
+--------- s o u r c e   c o d e ---------
+function (filename) {?  debug('load ' + JSON.stringify(filename) +?        ' for module ' + JSON.stringify(this.id));??  assert(!this.loaded);?  this.filename = filename;?  this.paths = Module._nodeModulePaths(path.dirname(filename));??  var extension = path.extname(filename) || '.js';?  if (!Module._extensi...
+
+-----------------------------------------
+}
+
+[6]: _load [module.js:312] (this=0x349aaef460f9 <JS Function Module>#5#,request=0x349aaef41b31 <String[39]: /development/playground/node-mount/test>,parent=0x389438604101 <null>,isMain=0x389438604161 <true>) {
+  // stack-allocated locals
+  var filename = 0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>
+  var cachedModule = 0x389438604121 <undefined>
+  var replModule = 0x389438604121 <undefined>
+  var module = 0x349aaef78c49 <a Module>#3#
+  var hadException = 0x389438604161 <true>
+  // expression stack (top to bottom)
+  [11] : 0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>
+  [10] : 0x349aaef78c49 <a Module>#3#
+--------- s o u r c e   c o d e ---------
+function (request, parent, isMain) {?  if (parent) {?    debug('Module._load REQUEST  ' + (request) + ' parent: ' + parent.id);?  }??  var filename = Module._resolveFilename(request, parent);??  var cachedModule = Module._cache[filename];?  if (cachedModule) {?    return cachedModule.exports;?  }??  if (Nati...
+
+-----------------------------------------
+}
+
+[7]: runMain [module.js:497] (this=0x349aaef460f9 <JS Function Module>#5#) {
+  // expression stack (top to bottom)
+  [03] : 0x389438604161 <true>
+  [02] : 0x389438604101 <null>
+  [01] : 0x349aaef41b31 <String[39]: /development/playground/node-mount/test>
+  [00] : 0x349aaef460f9 <JS Function Module>#5#
+--------- s o u r c e   c o d e ---------
+function () {?  // Load the main module--the command line argument.?  Module._load(process.argv[1], null, true);?  // Handle any nextTicks added in the first tick of the program?  process._tickCallback();?}
+-----------------------------------------
+}
+
+[8]: startup [node.js:119] (this=0x3894386573a1 <JS Global Object>#6#) {
+  // stack-allocated locals
+  var EventEmitter = 0x349aaef18bf9 <JS Function EventEmitter>#14#
+  var d = 0x389438604121 <undefined>
+  var path = 0x349aaef3beb9 <an Object>#15#
+  var cluster = 0x389438604121 <undefined>
+  var Module = 0x349aaef460f9 <JS Function Module>#5#
+  var debugTimeout = 0x389438604121 <undefined>
+  var opts = 0x389438604121 <undefined>
+  var repl = 0x389438604121 <undefined>
+  // heap-allocated locals
+  var code = 0x389438604121 <undefined>
+  // expression stack (top to bottom)
+  [08] : 0x349aaef460f9 <JS Function Module>#5#
+--------- s o u r c e   c o d e ---------
+function startup() {?    var EventEmitter = NativeModule.require('events').EventEmitter;??    process.__proto__ = Object.create(EventEmitter.prototype, {?      constructor: {?        value: process.constructor?      }?    });?    EventEmitter.call(process);??    process.EventEmitter = EventEmitter; // process.Event...
+
+-----------------------------------------
+}
+
+[9]: /* anonymous */ [node.js:902] (this=0x3894386573a1 <JS Global Object>#6#,process=0x349aaef057e1 <a process>#7#) {
+  // stack-allocated locals
+  var Script = 0x38943865f6d9 <JS Function NodeScript>#16#
+  // heap-allocated locals
+  var process = 0x349aaef057e1 <a process>#7#
+  var startup = 0x349aaef10f99 <JS Function startup>#17#
+  var assert = 0x38943866c7d1 <JS Function>#18#
+  var evalScript = 0x349aaef11011 <JS Function evalScript>#19#
+  var errnoException = 0x349aaef11059 <JS Function errnoException>#20#
+  var createWritableStdioStream = 0x349aaef110a1 <JS Function createWritableStdioStream>#21#
+  var runInThisContext = 0x38943865f471 <JS Function>#22#
+  var NativeModule = 0x349aaef11109 <JS Function NativeModule>#23#
+  // expression stack (top to bottom)
+  [02] : 0x3894386573a1 <JS Global Object>#6#
+  [01] : 0x349aaef10f99 <JS Function startup>#17#
+--------- s o u r c e   c o d e ---------
+function (process) {?  this.global = this;??  function startup() {?    var EventEmitter = NativeModule.require('events').EventEmitter;??    process.__proto__ = Object.create(EventEmitter.prototype, {?      constructor: {?        value: process.constructor?      }?    });?    EventEmitter.call(process);??    ...
+
+-----------------------------------------
+}
+
+==== Key         ============================================
+
+ #0# 0x389438657281: 0x389438657281 <JS Object>
+ #1# 0x349aaef78d41: 0x349aaef78d41 <an Object>
+ #2# 0x349aaef7b199: 0x349aaef7b199 <JS Function require>
+              main: 0x349aaef78c49 <a Module>#3#
+        extensions: 0x349aaef46699 <an Object>#4#
+             cache: 0x349aaef46501 <an Object>#24#
+ #3# 0x349aaef78c49: 0x349aaef78c49 <a Module>
+                id: 0x35317670a2b1 <String[1]: .>
+           exports: 0x349aaef78d41 <an Object>#1#
+            parent: 0x389438604101 <null>
+          filename: 0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>
+            loaded: 0x389438604181 <false>
+          children: 0x349aaef78fe1 <JS Array[1]>#25#
+             paths: 0x349aaef79c19 <JS Array[4]>#26#
+ #4# 0x349aaef46699: 0x349aaef46699 <an Object>
+ #5# 0x349aaef460f9: 0x349aaef460f9 <JS Function Module>
+      _contextLoad: 0x389438604181 <false>
+            _cache: 0x349aaef46501 <an Object>#24#
+        _pathCache: 0x349aaef46649 <an Object>#27#
+       _extensions: 0x349aaef46699 <an Object>#4#
+       globalPaths: 0x349aaef484d9 <JS Array[3]>#28#
+           wrapper: 0x349aaef15921 <JS Array[2]>#29#
+    _realpathCache: 0x349aaef469e1 <an Object>#30#
+ #6# 0x3894386573a1: 0x3894386573a1 <JS Global Object>
+ #7# 0x349aaef057e1: 0x349aaef057e1 <a process>
+           version: 0x349aaef05bd9 <String[8]: v0.10.25>
+    moduleLoadList: 0x349aaef05c91 <JS Array[18]>#31#
+          versions: 0x349aaef05d69 <an Object>#32#
+              arch: 0x349aaef063e9 <String[3]: x64>
+          platform: 0x349aaef06519 <String[5]: linux>
+              argv: 0x349aaef06559 <JS Array[2]>#33#
+          execArgv: 0x349aaef066f1 <JS Array[0]>#34#
+               env: 0x349aaef07179 <JS Object>#35#
+               pid: 28750
+          features: 0x349aaef07359 <an Object>#36#
+          execPath: 0x349aaef07d59 <String[18]: /opt/node/bin/node>
+      _tickInfoBox: 0x349aaef0ab81 <an Object>#37#
+           _events: 0x349aaef0ac81 <an Object>#38#
+            domain: 0x389438604101 <null>
+     _maxListeners: 10
+          _exiting: 0x389438604181 <false>
+            config: 0x349aaef37429 <an Object>#39#
+      maxTickDepth: 1000
+        mainModule: 0x349aaef78c49 <a Module>#3#
+ #8# 0x349aaef917a1: 0x349aaef917a1 <an Object>
+ #9# 0x389438682a81: 0x389438682a81 <JS Function>
+ #10# 0x349aaef92fd1: 0x349aaef92fd1 <JS Function>
+ #11# 0x349aaef92fb1: 0x349aaef92fb1 <JS Array[2]>
+                 0: 0x35317672b411 <String[8]: readonly>
+                 1: 0x35317672b431 <String[6]: noexec>
+ #12# 0x349aaef7bcc1: 0x349aaef7bcc1 <JS Function>
+ #13# 0x349aaef7bd81: 0x349aaef7bd81 <JS Array[5]>
+                 0: 0x349aaef78d41 <an Object>#1#
+                 1: 0x349aaef7b199 <JS Function require>#2#
+                 2: 0x349aaef78c49 <a Module>#3#
+                 3: 0x349aaef76261 <String[42]: /development/playground/node-mount/test.js>
+                 4: 0x349aaef7baf9 <String[34]: /development/playground/node-mount>
+ #14# 0x349aaef18bf9: 0x349aaef18bf9 <JS Function EventEmitter>
+ #15# 0x349aaef3beb9: 0x349aaef3beb9 <an Object>
+               sep: 0x3531767182f1 <String[1]: />
+         delimiter: 0x35317671d551 <String[1]: :>
+ #16# 0x38943865f6d9: 0x38943865f6d9 <JS Function NodeScript>
+ #17# 0x349aaef10f99: 0x349aaef10f99 <JS Function startup>
+    _lazyConstants: 0x389438604101 <null>
+ #18# 0x38943866c7d1: 0x38943866c7d1 <JS Function>
+ #19# 0x349aaef11011: 0x349aaef11011 <JS Function evalScript>
+ #20# 0x349aaef11059: 0x349aaef11059 <JS Function errnoException>
+ #21# 0x349aaef110a1: 0x349aaef110a1 <JS Function createWritableStdioStream>
+ #22# 0x38943865f471: 0x38943865f471 <JS Function>
+ #23# 0x349aaef11109: 0x349aaef11109 <JS Function NativeModule>
+           _source: 0x349aaef13111 <an Object>#40#
+            _cache: 0x349aaef155d9 <an Object>#41#
+           wrapper: 0x349aaef15921 <JS Array[2]>#29#
+ #24# 0x349aaef46501: 0x349aaef46501 <an Object>
+ #25# 0x349aaef78fe1: 0x349aaef78fe1 <JS Array[1]>
+                 0: 0x349aaef80051 <a Module>#42#
+ #26# 0x349aaef79c19: 0x349aaef79c19 <JS Array[4]>
+                 0: 0x349aaef79f19 <String[47]: /development/playground/node-mount/node_modules>
+                 1: 0x349aaef7a121 <String[36]: /development/playground/node_modules>
+                 2: 0x349aaef7a229 <String[25]: /development/node_modules>
+                 3: 0x349aaef7a319 <String[13]: /node_modules>
+ #27# 0x349aaef46649: 0x349aaef46649 <an Object>
+ #28# 0x349aaef484d9: 0x349aaef484d9 <JS Array[3]>
+                 0: 0x349aaef484b1 <String[19]: /root/.node_modules>
+                 1: 0x349aaef48029 <String[21]: /root/.node_libraries>
+                 2: 0x349aaef47bc9 <String[18]: /opt/node/lib/node>
+ #29# 0x349aaef15921: 0x349aaef15921 <JS Array[2]>
+                 0: 0x353176718579 <String[62]: (function (exports, require, module, __filename, __dirname) { >
+                 1: 0x3531767185d1 <String[4]\: \n});>
+ #30# 0x349aaef469e1: 0x349aaef469e1 <an Object>
+ #31# 0x349aaef05c91: 0x349aaef05c91 <JS Array[18]>
+                 0: 0x349aaef118b1 <String[13]: Binding evals>
+                 1: 0x349aaef130b9 <String[15]: Binding natives>
+                 2: 0x349aaef15b11 <String[19]: NativeModule events>
+                 3: 0x349aaef1ab59 <String[19]: NativeModule buffer>
+                 4: 0x349aaef22741 <String[14]: Binding buffer>
+                 5: 0x349aaef25941 <String[19]: NativeModule assert>
+                 6: 0x349aaef28aa1 <String[17]: NativeModule util>
+                 7: 0x349aaef3bdf9 <String[17]: NativeModule path>
+                 8: 0x349aaef41b79 <String[19]: NativeModule module>
+                 9: 0x349aaef494e1 <String[15]: NativeModule fs>
+                  ...
+ #32# 0x349aaef05d69: 0x349aaef05d69 <an Object>
+       http_parser: 0x349aaef05e21 <String[3]: 1.0>
+              node: 0x349aaef05e99 <String[7]: 0.10.25>
+                v8: 0x349aaef05f29 <String[8]: 3.14.5.9>
+              ares: 0x349aaef05fd1 <String[9]: 1.9.0-DEV>
+                uv: 0x349aaef06099 <String[7]: 0.10.23>
+              zlib: 0x349aaef061d1 <String[5]: 1.2.3>
+           modules: 0x349aaef06211 <String[2]: 11>
+           openssl: 0x349aaef06349 <String[6]: 1.0.1e>
+ #33# 0x349aaef06559: 0x349aaef06559 <JS Array[2]>
+                 0: 0x349aaef06599 <String[4]: node>
+                 1: 0x349aaef41b31 <String[39]: /development/playground/node-mount/test>
+ #34# 0x349aaef066f1: 0x349aaef066f1 <JS Array[0]>
+ #35# 0x349aaef07179: 0x349aaef07179 <JS Object>
+ #36# 0x349aaef07359: 0x349aaef07359 <an Object>
+             debug: 0x389438604181 <false>
+                uv: 0x389438604161 <true>
+              ipv6: 0x389438604161 <true>
+           tls_npn: 0x389438604161 <true>
+           tls_sni: 0x389438604161 <true>
+               tls: 0x389438604161 <true>
+ #37# 0x349aaef0ab81: 0x349aaef0ab81 <an Object>
+ #38# 0x349aaef0ac81: 0x349aaef0ac81 <an Object>
+ #39# 0x349aaef37429: 0x349aaef37429 <an Object>
+   target_defaults: 0x349aaef37499 <an Object>#43#
+         variables: 0x349aaef37ac9 <an Object>#44#
+ #40# 0x349aaef13111: 0x349aaef13111 <an Object>
+ #41# 0x349aaef155d9: 0x349aaef155d9 <an Object>
+            events: 0x349aaef15b39 <a NativeModule>#45#
+            buffer: 0x349aaef1aba1 <a NativeModule>#46#
+            assert: 0x349aaef25969 <a NativeModule>#47#
+              util: 0x349aaef28ac9 <a NativeModule>#48#
+              path: 0x349aaef3be21 <a NativeModule>#49#
+            module: 0x349aaef41ba1 <a NativeModule>#50#
+                fs: 0x349aaef49509 <a NativeModule>#51#
+            stream: 0x349aaef5e441 <a NativeModule>#52#
+  _stream_readable: 0x349aaef5f9c1 <a NativeModule>#53#
+  _stream_writable: 0x349aaef67961 <a NativeModule>#54#
+    _stream_duplex: 0x349aaef6b659 <a NativeModule>#55#
+ _stream_transform: 0x349aaef6c8b1 <a NativeModule>#56#
+_stream_passthrough: 0x349aaef6f271 <a NativeModule>#57#
+ #42# 0x349aaef80051: 0x349aaef80051 <a Module>
+                id: 0x349aaef7eec9 <String[47]: /development/playground/node-mount/lib/mount.js>
+           exports: 0x349aaef917a1 <an Object>#8#
+            parent: 0x349aaef78c49 <a Module>#3#
+          filename: 0x349aaef7eec9 <String[47]: /development/playground/node-mount/lib/mount.js>
+            loaded: 0x389438604161 <true>
+          children: 0x349aaef80229 <JS Array[1]>#58#
+             paths: 0x349aaef80ba1 <JS Array[5]>#59#
+ #43# 0x349aaef37499: 0x349aaef37499 <an Object>
+            cflags: 0x349aaef374d1 <JS Array[0]>#60#
+default_configuration: 0x349aaef375f1 <String[7]: Release>
+           defines: 0x349aaef376a1 <JS Array[0]>#61#
+      include_dirs: 0x349aaef37771 <JS Array[0]>#62#
+         libraries: 0x349aaef37859 <JS Array[0]>#63#
+ #44# 0x349aaef37ac9: 0x349aaef37ac9 <an Object>
+ #45# 0x349aaef15b39: 0x349aaef15b39 <a NativeModule>
+          filename: 0x349aaef15bb1 <String[9]: events.js>
+                id: 0x353176716409 <String[6]: events>
+           exports: 0x349aaef15cb9 <an Object>#64#
+            loaded: 0x389438604161 <true>
+ #46# 0x349aaef1aba1: 0x349aaef1aba1 <a NativeModule>
+          filename: 0x349aaef1ac19 <String[9]: buffer.js>
+                id: 0x353176716c39 <String[6]: buffer>
+           exports: 0x349aaef1ac81 <an Object>#65#
+            loaded: 0x389438604161 <true>
+ #47# 0x349aaef25969: 0x349aaef25969 <a NativeModule>
+          filename: 0x349aaef259e1 <String[9]: assert.js>
+                id: 0x353176717049 <String[6]: assert>
+           exports: 0x349aaef28889 <JS Function ok>#66#
+            loaded: 0x389438604161 <true>
+ #48# 0x349aaef28ac9: 0x349aaef28ac9 <a NativeModule>
+          filename: 0x349aaef28b41 <String[7]: util.js>
+                id: 0x35317671bf29 <String[4]: util>
+           exports: 0x349aaef28b61 <an Object>#67#
+            loaded: 0x389438604161 <true>
+ #49# 0x349aaef3be21: 0x349aaef3be21 <a NativeModule>
+          filename: 0x349aaef3be99 <String[7]: path.js>
+                id: 0x353176716739 <String[4]: path>
+           exports: 0x349aaef3beb9 <an Object>#15#
+            loaded: 0x389438604161 <true>
+ #50# 0x349aaef41ba1: 0x349aaef41ba1 <a NativeModule>
+          filename: 0x349aaef41c19 <String[9]: module.js>
+                id: 0x353176709a81 <String[6]: module>
+           exports: 0x349aaef460f9 <JS Function Module>#5#
+            loaded: 0x389438604161 <true>
+ #51# 0x349aaef49509: 0x349aaef49509 <a NativeModule>
+          filename: 0x349aaef49581 <String[5]: fs.js>
+                id: 0x353176717a51 <String[2]: fs>
+           exports: 0x349aaef495a1 <an Object>#68#
+            loaded: 0x389438604161 <true>
+ #52# 0x349aaef5e441: 0x349aaef5e441 <a NativeModule>
+          filename: 0x349aaef5e4b9 <String[9]: stream.js>
+                id: 0x353176717921 <String[6]: stream>
+           exports: 0x349aaef5f4b1 <JS Function Stream>#69#
+            loaded: 0x389438604161 <true>
+ #53# 0x349aaef5f9c1: 0x349aaef5f9c1 <a NativeModule>
+          filename: 0x349aaef5f9f9 <String[19]: _stream_readable.js>
+                id: 0x3531767270c9 <String[16]: _stream_readable>
+           exports: 0x349aaef667c1 <JS Function Readable>#70#
+            loaded: 0x389438604161 <true>
+ #54# 0x349aaef67961: 0x349aaef67961 <a NativeModule>
+          filename: 0x349aaef67999 <String[19]: _stream_writable.js>
+                id: 0x3531767270f1 <String[16]: _stream_writable>
+           exports: 0x349aaef6aa59 <JS Function Writable>#71#
+            loaded: 0x389438604161 <true>
+ #55# 0x349aaef6b659: 0x349aaef6b659 <a NativeModule>
+          filename: 0x349aaef6b691 <String[17]: _stream_duplex.js>
+                id: 0x353176727139 <String[14]: _stream_duplex>
+           exports: 0x349aaef6c209 <JS Function Duplex>#72#
+            loaded: 0x389438604161 <true>
+ #56# 0x349aaef6c8b1: 0x349aaef6c8b1 <a NativeModule>
+          filename: 0x349aaef6c8e9 <String[20]: _stream_transform.js>
+                id: 0x353176727189 <String[17]: _stream_transform>
+           exports: 0x349aaef6e9f1 <JS Function Transform>#73#
+            loaded: 0x389438604161 <true>
+ #57# 0x349aaef6f271: 0x349aaef6f271 <a NativeModule>
+          filename: 0x349aaef6f2a9 <String[22]: _stream_passthrough.js>
+                id: 0x3531767271e1 <String[19]: _stream_passthrough>
+           exports: 0x349aaef6fbb1 <JS Function PassThrough>#74#
+            loaded: 0x389438604161 <true>
+ #58# 0x349aaef80229: 0x349aaef80229 <JS Array[1]>
+                 0: 0x349aaef91719 <a Module>#75#
+ #59# 0x349aaef80ba1: 0x349aaef80ba1 <JS Array[5]>
+                 0: 0x349aaef80e81 <String[51]: /development/playground/node-mount/lib/node_modules>
+                 1: 0x349aaef81051 <String[47]: /development/playground/node-mount/node_modules>
+                 2: 0x349aaef81171 <String[36]: /development/playground/node_modules>
+                 3: 0x349aaef81279 <String[25]: /development/node_modules>
+                 4: 0x349aaef81369 <String[13]: /node_modules>
+ #60# 0x349aaef374d1: 0x349aaef374d1 <JS Array[0]>
+ #61# 0x349aaef376a1: 0x349aaef376a1 <JS Array[0]>
+ #62# 0x349aaef37771: 0x349aaef37771 <JS Array[0]>
+ #63# 0x349aaef37859: 0x349aaef37859 <JS Array[0]>
+ #64# 0x349aaef15cb9: 0x349aaef15cb9 <an Object>
+      usingDomains: 0x389438604181 <false>
+ #65# 0x349aaef1ac81: 0x349aaef1ac81 <an Object>
+ INSPECT_MAX_BYTES: 50
+ #66# 0x349aaef28889: 0x349aaef28889 <JS Function ok>
+ #67# 0x349aaef28b61: 0x349aaef28b61 <an Object>
+ #68# 0x349aaef495a1: 0x349aaef495a1 <an Object>
+ #69# 0x349aaef5f4b1: 0x349aaef5f4b1 <JS Function Stream>
+            super_: 0x349aaef18bf9 <JS Function EventEmitter>#14#
+ #70# 0x349aaef667c1: 0x349aaef667c1 <JS Function Readable>
+ #71# 0x349aaef6aa59: 0x349aaef6aa59 <JS Function Writable>
+ #72# 0x349aaef6c209: 0x349aaef6c209 <JS Function Duplex>
+            super_: 0x349aaef667c1 <JS Function Readable>#70#
+ #73# 0x349aaef6e9f1: 0x349aaef6e9f1 <JS Function Transform>
+            super_: 0x349aaef6c209 <JS Function Duplex>#72#
+ #74# 0x349aaef6fbb1: 0x349aaef6fbb1 <JS Function PassThrough>
+            super_: 0x349aaef6e9f1 <JS Function Transform>#73#
+ #75# 0x349aaef

@@ -29,7 +29,6 @@ struct Mounty {
     int flags;
 
     int error;
-    bool success;  
 };
 
 //        0         1       2       3       4
@@ -39,19 +38,7 @@ Handle<Value> Mount(const Arguments &args) {
     
     int argsLength = args.Length();
     if (argsLength <= 2) {
-        if (argsLength == 0){
-            return ThrowException(String::New("Missing 'devFile'"));
-        }
-
-        if (argsLength == 1){
-            return ThrowException(String::New("Missing 'target'"));
-        }
-
-        if(argsLength == 2){
-            return ThrowException(String::New("Missing 'fsType'"));
-        }
-
-        return ThrowException(String::New("mount needs at least 3 parameters"));
+        return ThrowException(Exception::Error(String::New("mount needs at least 3 parameters")));
     }
    
     Local<Function> cb;
@@ -59,7 +46,7 @@ Handle<Value> Mount(const Arguments &args) {
     Local<Value> data = String::New("");
 
     if(!args[0]->IsString() || !args[1]->IsString() || !args[2]->IsString()){
-        return ThrowException(String::New("Wrong argument types... expected strings"));
+        return ThrowException(Exception::Error(String::New("Invalid arguments")));
     }
 
     //Check and set options array (ignores all non-array values)
@@ -107,7 +94,6 @@ Handle<Value> Mount(const Arguments &args) {
     Mounty* mounty = new Mounty();
 
     mounty->callback = Persistent<Function>::New(cb);
-    mounty->success = false;
 
     mounty->devFile = std::string(*devFile);
     mounty->target = std::string(*target);
@@ -139,8 +125,6 @@ void AsyncMount(uv_work_t* req){
     if(ret == -1){
         mounty->error = errno;
     }
-
-    mounty->success = (ret == 0);
 }
 
 //Used for both, mount and umount since they have the same callback interface
@@ -148,34 +132,41 @@ void AsyncAfter(uv_work_t* req){
     HandleScope scope;
     Mounty* mounty = static_cast<Mounty*>(req->data);
 
+    const unsigned argc = 1;
+    Local<Value> argv[argc];
+
     //Call error-callback, if error... otherwise send result
     if(mounty->error > 0){
         Local<String> s = Integer::New((int32_t)mounty->error)->ToString();
         Local<Value> err = Exception::Error(s);
 
-        const unsigned argc = 1;
-        Local<Value> argv[argc] = { err };
+        //const unsigned argc = 1;
+        argv[0] = err;
 
-        TryCatch tc;
-        mounty->callback->Call(Context::GetCurrent()->Global(), argc, argv);
+        //TryCatch tc;
+        //mounty->callback->Call(Context::GetCurrent()->Global(), argc, argv);
 
-        if(tc.HasCaught()){
-            node::FatalException(tc);
-        }
+        //if(tc.HasCaught()){
+            //node::FatalException(tc);
+        //}
     }
     else{
-        const unsigned argc = 2;
-        Local<Value> argv[argc] = {
-            Local<Value>::New(Null()),
-            Local<Value>::New(Boolean::New(mounty->success))
-        };
+        //const unsigned argc = 1;
+        argv[0] = Local<Value>::New(Null());
 
-        TryCatch tc;
-        mounty->callback->Call(Context::GetCurrent()->Global(), argc, argv);
+        //TryCatch tc;
+        //mounty->callback->Call(Context::GetCurrent()->Global(), argc, argv);
 
-        if(tc.HasCaught()){
-            node::FatalException(tc);
-        }
+        //if(tc.HasCaught()){
+            //node::FatalException(tc);
+        //}
+    }
+
+    TryCatch tc;
+    mounty->callback->Call(Context::GetCurrent()->Global(), argc, argv);
+
+    if(tc.HasCaught()){
+        node::FatalException(tc);
     }
 
     mounty->callback.Dispose();
@@ -228,8 +219,6 @@ void AsyncUmount(uv_work_t *req){
     if(ret == -1){
         mounty->error = errno;
     }
-
-    mounty->success = (ret == 0);
 }
 
 void init (Handle<Object> exports, Handle<Object> module) {
