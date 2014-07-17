@@ -4,7 +4,7 @@
 
 var chai = require("chai");
 var expect = chai.expect;
-var mount = require("../mount");
+var mount = require("..");
 
 var path = require("path");
 var fs = require("fs");

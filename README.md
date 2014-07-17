@@ -1,6 +1,6 @@
 # node-mount
 
-Mount/unmount devices from node.js
+Mount/umount devices from node.js
 
 Really works on linux, may work on OS X, and will never work on windows.
 
@@ -81,7 +81,7 @@ mount.mount('/dev/sr0', 'myDir', 'iso9660', function(err) {
 *Umount after successful mount:*
 ```javascript
 var mount = requrie("mount");
-mount.unmount('myDir', function(err) {
+mount.umount('myDir', function(err) {
     if(err){
         console.log("Umount went wrong: " + err);
         return;
