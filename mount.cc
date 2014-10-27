@@ -26,8 +26,7 @@ struct Mounty {
     std::string fsType;
     std::string target; //used by umount
     std::string data;
-    int flags;
-
+    long flags;
     int error;
 };
 
@@ -107,34 +106,16 @@ Handle<Value> Mount(const Arguments &args) {
     String::Utf8Value devFile(args[0]->ToString());
     String::Utf8Value target(args[1]->ToString());
     String::Utf8Value fsType(args[2]->ToString());
-    Handle<Array> options = Handle<Array>::Cast(args[3]);
+    Local<Integer> options = args[3]->ToInteger();
     String::Utf8Value dataStr(args[4]->ToString());
     Local<Function> cb = Local<Function>::Cast(args[5]);
-
-    int flags = 0;
-    for (unsigned int i = 0; i < options->Length(); i++) {
-        String::Utf8Value str(options->Get(i)->ToString());
-
-        if(!strcmp(*str, "bind")) {
-            flags |= MS_BIND;
-        } else if(!strcmp(*str, "readonly")) {
-            flags |= MS_RDONLY;
-        } else if(!strcmp(*str, "remount")) {
-            flags |= MS_REMOUNT;
-        } else if(!strcmp(*str, "noexec")){
-            flags |= MS_NOEXEC;
-        } else{
-            //return ThrowException(Exception::Error(String::New(strcat("Invalid option: ", *str))));
-            return ThrowException(Exception::Error(String::New("Invalid option")));
-        }
-    }
 
     //Prepare data for the async work
     Mounty* mounty = new Mounty();
     mounty->devFile = std::string(*devFile);
     mounty->target = std::string(*target);
     mounty->fsType = std::string(*fsType);
-    mounty->flags = flags;
+    mounty->flags = options->Value();
     mounty->data = std::string(*dataStr);
     mounty->callback = Persistent<Function>::New(cb);
 
@@ -181,25 +162,8 @@ Handle<Value> MountSync(const Arguments &args) {
     String::Utf8Value devFile(args[0]->ToString());
     String::Utf8Value target(args[1]->ToString());
     String::Utf8Value fsType(args[2]->ToString());
-    Handle<Array> options = Handle<Array>::Cast(args[3]);
+    Handle<Integer> options = args[3]->ToInteger();
     String::Utf8Value dataStr(args[4]->ToString());
-
-    int flags = 0;
-    for (unsigned int i = 0; i < options->Length(); i++) {
-        String::Utf8Value str(options->Get(i)->ToString());
-
-        if(!strcmp(*str, "bind")) {
-            flags |= MS_BIND;
-        } else if(!strcmp(*str, "readonly")) {
-            flags |= MS_RDONLY;
-        } else if(!strcmp(*str, "remount")) {
-            flags |= MS_REMOUNT;
-        } else if(!strcmp(*str, "noexec")){
-            flags |= MS_NOEXEC;
-        } else{
-            return ThrowException(Exception::Error(String::New("Invalid option")));
-        }
-    }
 
     std::string s_devFile(*devFile);
     std::string s_target(*target);
@@ -209,14 +173,14 @@ Handle<Value> MountSync(const Arguments &args) {
     int ret = mount(s_devFile.c_str(), 
                     s_target.c_str(), 
                     s_fsType.c_str(), 
-                    flags, 
+                    options->Value(), 
                     s_dataStr.c_str());
 
     if(ret != 0){
         return ThrowException(node::ErrnoException(errno, "mount", "", s_devFile.c_str()));
     }
 
-    return scope.Close(Boolean::New(true));
+    return scope.Close(True());
 }
 
 Handle<Value> UmountSync(const Arguments &args) {
@@ -235,7 +199,7 @@ Handle<Value> UmountSync(const Arguments &args) {
         return ThrowException(node::ErrnoException(errno, "umount", "", s_target.c_str()));
     }
 
-    return scope.Close(Boolean::New(true));
+    return scope.Close(True());
 }
 
 void init (Handle<Object> exports, Handle<Object> module) {

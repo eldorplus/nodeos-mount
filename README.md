@@ -28,6 +28,29 @@ mount.mount('/dev/sr0', 'myDir', 'iso9660', function(err) {
 });
 ```
 
+**Mount ReadOnly+Remount (easy)**
+```javascript
+var mount = require("mount");
+mount.mount('tmpfs', 'tmpdir', 'tmpfs', ['remount', 'readonly'], function(err) {
+    if(err){
+        return;
+    }
+
+    //
+});
+```
+
+**Mount ReadOnly+Remount (flags)**
+```javascript
+var mount = require("mount");
+mount.mount('tmpfs', 'tmpdir', 'tmpfs', mount.MS_REMOUNT | mount.MS_RDONLY, function(err) {
+    if(err){
+        return;
+    }
+    //
+});
+```
+
 **Umount after successful mount:**
 ```javascript
 var mount = requrie("mount");
@@ -75,7 +98,7 @@ Attaches the file system specified by `source` (which is often a device name, bu
 * `source` - `{String}` - Device-File being mounted (located in /dev) a.k.a. `devFile`.
 * `target` - `{String}` - Directory to mount the device to.
 * `fsType` - `{String}` - Filesystem identificator (one of /proc/filesystems).
-* `options` - `{Array}` - Array containing String options:
+* `options` - `{Array}|{Number}` - Number describing mount flags or an Array containing String options described below:
     - `bind` - Perform a bind mount, making a file or a directory subtree visible at another point within a file system. Bind mounts may cross file system boundaries and span chroot(2) jails. The `fstype` and `dataStr` arguments are ignored.
     - `readonly` - Mount file system read-only.
     - `remount` - Remount an existing mount. This allows you to change the `options` and `dataStr` of an existing mount without having to unmount and remount the file system. `target` should be the same value specified in the initial `mount()` call; `source` and `fsType` are ignored.
@@ -117,6 +140,12 @@ Alias of `mount.umount()`
 This function is **deprecated**; please use `mount.umountSync()` instead.
 
 Alias of `mount.umountSync()`
+
+### mount.MS_*
+Constants for easy `mount` `flags` bitmask manipulation.
+
+### TODO:
+- umount2 - force force unmounting
 
 ## Credits
 - Directly forked from magicpat`s [repository](https://github.com/magicpat/node-mount)
