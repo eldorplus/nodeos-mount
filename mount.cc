@@ -140,8 +140,11 @@ void AsyncAfter(uv_work_t* req){
 
     //Call error-callback, if error... otherwise send result
     if(mounty->error > 0){
-        Local<String> s = Integer::New((int32_t)mounty->error)->ToString();
-        Local<Value> err = Exception::Error(s);
+        char *errStr = strerror(mounty->error);
+        Local<String> s = String::New(errStr);
+        Local<Object> err = Exception::Error(s)->ToObject();
+        err->Set(String::NewSymbol("code"), String::New(strerror(mounty->error)));
+        err->Set(String::NewSymbol("errno"), Integer::New((int32_t)mounty->error));
 
         //const unsigned argc = 1;
         argv[0] = err;
@@ -152,8 +155,7 @@ void AsyncAfter(uv_work_t* req){
         //if(tc.HasCaught()){
             //node::FatalException(tc);
         //}
-    }
-    else{
+    } else {
         //const unsigned argc = 1;
         argv[0] = Local<Value>::New(Null());
 
