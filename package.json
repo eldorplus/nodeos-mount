@@ -8,19 +8,30 @@
     "device",
     "async"
   ],
-  "version": "0.0.4",
+  "version": "0.1.1",
+  "homepage": "https://github.com/hertzg/node-mount",
+  "bugs": "https://github.com/hertzg/node-mount/issues",
   "repository": {
     "type": "git",
-    "url": "git://github.com/magicpat/node-mount.git"
+    "url": "git://github.com/hertzg/node-mount.git"
   },
   "engines": {
     "node": ">=0.8.0"
   },
   "private": true,
-  "author": "Patrick Stapfer <p.stapfer@deadlock.at>",
+  "author": "George Kotchlamazashvili <georgedot@gmail.com>",
+  "contributors": [{
+      "name": "Justas Brazauskas",
+      "email": "brazauskasjustas@gmail.com"
+    }, {
+      "name": "Patrick Stapfer",
+      "email": "p.stapfer@deadlock.at",
+      "url": "http://www.deadlock.at"
+  }],
   "license": "MIT",
   "gypfile": true,
   "readmeFilename": "README.md",
+  "dependencies": {},
   "devDependencies": {
     "mocha": "~1.18.2",
     "chai": "~1.9.1",
