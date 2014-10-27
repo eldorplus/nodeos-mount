@@ -144,8 +144,9 @@ Alias of `mount.umountSync()`
 ### mount.MS_*
 Constants for easy `mount` `flags` bitmask manipulation.
 
-### TODO:
+## TODO:
 - umount2 - force force unmounting
+- unittests
 
 ## Credits
 - Directly forked from magicpat`s [repository](https://github.com/magicpat/node-mount)
