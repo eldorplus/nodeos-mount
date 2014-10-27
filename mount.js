@@ -106,7 +106,6 @@ function _mount() {
         options = __makeMountFlags(options)
     }
 
-    console.log(options, module.exports.MS_REMOUNT)
     _binding.mount(devFile, target, fsType, options, dataStr, cb)
 }
 
