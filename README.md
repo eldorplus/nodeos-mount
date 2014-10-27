@@ -4,11 +4,41 @@ Mount/umount devices from node.js
 
 Really works on linux, may work on OS X, and will never work on windows.
 
-##Features
-- Asynchrnous/Synchronous mount calls (using libuv)
-- Node-like behaviour for async/synch calls and result reporting
-- More flag options (noexec)
-- Pretty close to C-API
+##Examples
+**Mount Tmpfs:**
+```javascript
+var mount = require("mount");
+mount.mount('tmpfs', 'tmpDir', 'tmpfs', function(err) {
+	if(err){
+        return;
+    }
+    //Tmpfs mounted successfully
+});
+```
+
+**Mount DVD:**
+```javascript
+var mount = require("mount");
+mount.mount('/dev/sr0', 'myDir', 'iso9660', function(err) {
+    if(err){
+        return;
+    }
+
+    //
+});
+```
+
+**Umount after successful mount:**
+```javascript
+var mount = requrie("mount");
+mount.umount('myDir', function(err) {
+    if(err){
+        console.log("Umount went wrong: " + err);
+        return;
+    }
+
+});
+```
 
 ##Installation
 This package is not featured in NPM (yet), so you have to add this file in your package.json
@@ -56,28 +86,6 @@ Attaches the file system specified by `source` (which is often a device name, bu
 
 Values for the `fstype` argument supported by the kernel are listed in `/proc/filesystems` (e.g., "minix", "ext2", "ext3", "jfs", "xfs", "reiserfs", "msdos", "proc", "nfs", "iso9660").
 
-**Mount Tmpfs:**
-```javascript
-var mount = require("mount");
-mount.mount('tmpfs', 'tmpDir', 'tmpfs', function(err) {
-	if(err){
-        return;
-    }
-    //Tmpfs mounted successfully
-});
-```
-
-**Mount DVD:**
-```javascript
-var mount = require("mount");
-mount.mount('/dev/sr0', 'myDir', 'iso9660', function(err) {
-    if(err){
-        return;
-    }
-
-    //
-});
-```
 
 ### mount.umount(target, callback)
 Removes the attachment of the (topmost) file system mounted on `target`.
@@ -92,17 +100,6 @@ Values for the `fstype` argument supported by the kernel are listed in `/proc/fi
 
 Returns `undefined`
 
-**Umount after successful mount:**
-```javascript
-var mount = requrie("mount");
-mount.umount('myDir', function(err) {
-    if(err){
-        console.log("Umount went wrong: " + err);
-        return;
-    }
-
-});
-```
 ### mount.mountSync(source, target, fsType, [options], [dataStr])
 Synchronous variant of `mount.mount()`
 
