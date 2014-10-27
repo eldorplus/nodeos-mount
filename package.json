@@ -2,6 +2,7 @@
   "name": "mount",
   "description": "Async mount / umount system devices",
   "main": "./mount",
+  "os" : [ "linux", "darwin", "!win32" ],
   "keywords": [
     "mount",
     "linux",
