@@ -63,93 +63,63 @@ function __makeMountFlags(array) {
     return flags
 }
 
-function _mount() {
-    var argc = arguments.length
-    ;
+function checkArguments(devFile, target, fsType, options, dataStr)
+{
+  if(devFile === undefined) throw new Error('devFile is mandatory')
+  if(target  === undefined) throw new Error('target is mandatory')
 
-    //At least [devFile, target, fsType, cb]
-    if(argc < 4 || typeof arguments[argc-1] !== 'function') {
-        throw new Error('Invalid arguments')
-    }
+  if(typeof fsType === 'number' || fsType instanceof Array)
+  {
+    dataStr = options
+    options = fsType
+    fsType  = undefined
+  }
 
-    var cb = arguments[argc-1];
+  // default values
+  fsType  = fsType  || 'auto'
+  options = options || 0
+  dataStr = dataStr || ''
 
-    //ensure that options is an array or number
-    if(argc > 4 && (typeof arguments[3] !== 'number' && (typeof arguments[3] === 'object' && arguments[3].constructor !== Array))) {
-        throw new Error('Argument options must be an array or number')
-    }
+  //ensure that options is an array or number
+  if(typeof options !== 'number' && options.constructor !== Array)
+    throw new Error('Argument options must be an array or number')
 
-    if(argc > 5 && typeof arguments[4] !== 'string') {
-        throw new Error('Argument dataStr must be a string')
-    }
+  //ensure that dataStr is a string
+  if(typeof dataStr !== 'string')
+    throw new Error('Argument dataStr must be a string')
 
-    if(argc > 6) {
-        throw new Error('Too many arguments')
-    }
+  if(options.constructor !== Number)
+    options = __makeMountFlags(options)
 
-    //Last param is always callback
-    var devFile = String(arguments[0])
-      , target = String(arguments[1])
-      , fsType = String(arguments[2])
-      , options = 0
-      , dataStr = ''
-    ;
-
-    if(argc === 5) {
-        options = arguments[3]
-    } else if(argc === 6) {
-        options = arguments[3]
-        dataStr = arguments[4]
-    }
-
-    if(options.constructor !== Number) {
-        options = __makeMountFlags(options)
-    }
-
-    _binding.mount(devFile, target, fsType, options, dataStr, cb)
+  return [devFile, target, fsType, options, dataStr]
 }
 
-function _mountSync() {
-    var argc = arguments.length;
+function _mount(devFile, target, fsType, options, dataStr, cb) {
+  var argc = arguments.length
 
-    if(argc < 3) {
-        throw new Error('Invalid arguments')
-    }
+  //Last param is always callback
+  if(typeof arguments[argc-1] !== 'function')
+    throw new Error('Last argument must be a callback function')
 
-    //ensure that options is an array or number
-    if(argc > 4 && (typeof arguments[3] !== 'number' && (typeof arguments[3] === 'object' && arguments[3].constructor !== Array))) {
-        throw new Error('Argument options must be an array or number')
-    }
+  cb = arguments[argc-1]
 
+  switch(argc)
+  {
+    case 3: fsType  = undefined; break
+    case 4: options = undefined; break
+    case 5: dataStr = undefined; break
+  }
 
-    if(argc > 4 && typeof arguments[4] !== 'string') {
-        throw new Error('Argument dataStr must be a string')
-    }
+  var argv = checkArguments(devFile, target, fsType, options, dataStr)
+  argv.push(cb)
 
-    if(argc > 5) {
-        throw new Error('Too many arguments')
-    }
+  _binding.mount.apply(_binding, argv)
+}
 
-    var devFile = String(arguments[0])
-      , target = String(arguments[1])
-      , fsType = String(arguments[2])
-      , options = []
-      , dataStr = ''
-    ;
+function _mountSync(devFile, target, fsType, options, dataStr) {
+  var argv = checkArguments(devFile, target, fsType, options, dataStr)
 
-    if(argc === 4) {
-        options = arguments[3]
-    } else if(argc === 5) {
-        options = arguments[3]
-        dataStr = arguments[4]
-    }
-
-    if(options.constructor !== Number) {
-        options = __makeMountFlags(options)
-    }
-
-
-    return _binding.mountSync(devFile, target, fsType, options, dataStr);
+  return _binding.mountSync.apply(_binding, argv)
 }
 
 function _umount(target, cb) {

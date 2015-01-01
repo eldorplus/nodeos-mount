@@ -1,5 +1,5 @@
 {
-  "name": "mount",
+  "name": "nodeos-mount",
   "description": "Async mount / umount system devices",
   "main": "./mount",
   "os" : [ "linux", "darwin", "!win32" ],
@@ -19,7 +19,6 @@
   "engines": {
     "node": ">=0.8.0"
   },
-  "private": true,
   "author": "George Kotchlamazashvili <georgedot@gmail.com>",
   "contributors": [{
       "name": "Justas Brazauskas",
@@ -28,7 +27,14 @@
       "name": "Patrick Stapfer",
       "email": "p.stapfer@deadlock.at",
       "url": "http://www.deadlock.at"
+    }, {
+      "name": "Jesús Leganés Combarro 'piranna'",
+      "email": "piranna@gmail.com",
+      "url": "http://pirannafs.blogspot.com"
   }],
+  "scripts": {
+    "test": "grunt test"
+  },
   "license": "MIT",
   "gypfile": true,
   "readmeFilename": "README.md",
