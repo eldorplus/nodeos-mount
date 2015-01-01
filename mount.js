@@ -12,8 +12,6 @@ module.exports = {
     mountSync: _mountSync,
     umountSync: _umountSync,
 
-    unmountSync: Util.deprecate(_umount, 'mount.unmountSync: Use mount.umountSync() instead'),
-    unmount: Util.deprecate(_umount, 'mount.unmount: Use mount.umount() instead'),
     MS_RDONLY: 1,
     MS_NOSUID: 2,
     MS_NODEV: 4,
@@ -22,6 +20,7 @@ module.exports = {
     MS_REMOUNT: 32,
     MS_MANDLOCK: 64,
     MS_DIRSYNC: 128,
+
     MS_NOATIME: 1024,
     MS_NODIRATIME: 2048,
     MS_BIND: 4096,
