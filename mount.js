@@ -118,6 +118,22 @@ function _mount(devFile, target, fsType, options, dataStr, cb) {
 function _mountSync(devFile, target, fsType, options, dataStr) {
   var argv = checkArguments(devFile, target, fsType, options, dataStr)
 
+  if(argv[2] == 'auto')
+  {
+    var filesystems = fs.readFileSync('/proc/filesystems', 'utf8')
+
+    filesystems = filesystems.split('/n').filter(function(value)
+    {
+      return value.indexOf('nodev') > -1
+    })
+
+    for(var index=0; argv[2]=filesystems[index]; index++)
+      if(_binding.mountSync.apply(_binding, argv))
+        return true
+
+    throw new Error('Unknown filesystem for ' + devFile ? devFile : target)
+  }
+
   return _binding.mountSync.apply(_binding, argv)
 }
 
