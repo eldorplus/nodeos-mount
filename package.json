@@ -47,7 +47,8 @@
   "gypfile": true,
   "readmeFilename": "README.md",
   "dependencies": {
-    "async": "^0.9.0"
+    "async": "^0.9.0",
+    "nan": "*"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
