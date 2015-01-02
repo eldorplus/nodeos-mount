@@ -2,7 +2,11 @@
   "name": "nodeos-mount",
   "description": "Async mount / umount system devices",
   "main": "./mount",
-  "os" : [ "linux", "darwin", "!win32" ],
+  "os": [
+    "linux",
+    "darwin",
+    "!win32"
+  ],
   "keywords": [
     "mount",
     "linux",
@@ -20,25 +24,31 @@
     "node": ">=0.8.0"
   },
   "author": "George Kotchlamazashvili <georgedot@gmail.com>",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Justas Brazauskas",
       "email": "brazauskasjustas@gmail.com"
-    }, {
+    },
+    {
       "name": "Patrick Stapfer",
       "email": "p.stapfer@deadlock.at",
       "url": "http://www.deadlock.at"
-    }, {
+    },
+    {
       "name": "Jesús Leganés Combarro 'piranna'",
       "email": "piranna@gmail.com",
       "url": "http://pirannafs.blogspot.com"
-  }],
+    }
+  ],
   "scripts": {
     "test": "grunt test"
   },
   "license": "MIT",
   "gypfile": true,
   "readmeFilename": "README.md",
-  "dependencies": {},
+  "dependencies": {
+    "async": "^0.9.0"
+  },
   "devDependencies": {
     "mocha": "~1.18.2",
     "chai": "~1.9.1",

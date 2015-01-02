@@ -1,8 +1,8 @@
 "use strict";
 
 var _binding = require('./build/Release/mount')
-  , Util = require('util')
-;
+
+var detectSeries = require('async').detectSeries
 
 module.exports = {
     _binding: _binding,
@@ -93,6 +93,11 @@ function checkArguments(devFile, target, fsType, options, dataStr)
   return [devFile, target, fsType, options, dataStr]
 }
 
+function filterNoDev(value)
+{
+  return value.indexOf('nodev') > -1
+}
+
 function _mount(devFile, target, fsType, options, dataStr, cb) {
   var argc = arguments.length
 
@@ -110,9 +115,35 @@ function _mount(devFile, target, fsType, options, dataStr, cb) {
   }
 
   var argv = checkArguments(devFile, target, fsType, options, dataStr)
-  argv.push(cb)
 
-  _binding.mount.apply(_binding, argv)
+  if(argv[2] == 'auto')
+    fs.readFile('/proc/filesystems', 'utf8', function(error, data)
+    {
+      if(error) return cb(error)
+
+      var filesystems = data.split('/n').filter(filterNoDev)
+
+      detectSeries(filesystems, function(item, callback)
+      {
+        argv[2] = item
+        argv[6] = function(error)
+        {
+          callback(!error)
+        }
+
+        _binding.mount.apply(_binding, argv)
+      },
+      function(result)
+      {
+        cb(result ? null : new Error('Unknown filesystem for ' + devFile ? devFile : target))
+      })
+    })
+  else
+  {
+    argv.push(cb)
+
+    _binding.mount.apply(_binding, argv)
+  }
 }
 
 function _mountSync(devFile, target, fsType, options, dataStr) {
@@ -122,10 +153,7 @@ function _mountSync(devFile, target, fsType, options, dataStr) {
   {
     var filesystems = fs.readFileSync('/proc/filesystems', 'utf8')
 
-    filesystems = filesystems.split('/n').filter(function(value)
-    {
-      return value.indexOf('nodev') > -1
-    })
+    filesystems = filesystems.split('/n').filter(filterNoDev)
 
     for(var index=0; argv[2]=filesystems[index]; index++)
       if(_binding.mountSync.apply(_binding, argv))
