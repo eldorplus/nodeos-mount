@@ -15,6 +15,7 @@ struct Mounty {
     std::string target; //used by umount
     std::string data;
     long flags;
+    int error;
 };
 
 class MountWorker : public NanAsyncWorker {
@@ -23,6 +24,8 @@ public:
         : NanAsyncWorker(callback), mounty(mounty) {}
     ~MountWorker() {}
 
+    // This function is executed in another thread at some point after it has been
+    // scheduled. IT MUST NOT USE ANY V8 FUNCTIONALITY.
     void Execute() {
         int ret = mount(mounty->devFile.c_str(),
                         mounty->target.c_str(),
@@ -31,7 +34,7 @@ public:
                         mounty->data.c_str());
 
         if (ret == -1) {
-            SetErrorMessage(strerror(errno));
+            mounty->error = errno;
         }
     }
 
@@ -42,12 +45,15 @@ public:
             NanNull()
         };
 
+        if (mounty->error > 0) {
+            argv[0] = node::ErrnoException(mounty->error, "mount", "", mounty->devFile.c_str());
+        }
+
         callback->Call(1, argv);
     }
 
 private:
     Mounty *mounty;
-
 };
 
 class UmountWorker : public NanAsyncWorker {
@@ -60,7 +66,7 @@ public:
         int ret = umount(mounty->target.c_str());
 
         if (ret == -1) {
-            SetErrorMessage(strerror(errno));
+            mounty->error = errno;
         }
     }
 
@@ -69,6 +75,10 @@ public:
         Local<Value> argv[] = {
             NanNull()
         };
+
+        if (mounty->error > 0) {
+            argv[0] = node::ErrnoException(mounty->error, "umount", "", mounty->target.c_str());
+        }
 
         callback->Call(1, argv);
     }
