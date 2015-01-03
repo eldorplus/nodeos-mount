@@ -43,7 +43,7 @@ module.exports = {
     MS_NOUSER: (1<<31),
 }
 
-function __makeMountFlags(array) {
+function makeMountFlags(array) {
     var flags = 0
     for(var i=0; i<array.length; i++) {
         var option = array[i].toLowerCase()
@@ -60,6 +60,16 @@ function __makeMountFlags(array) {
         }
     }
     return flags
+}
+
+function makeMountDataStr(object)
+{
+  var result = []
+
+  for(var key in object)
+    result.push(key+'='+object[key])
+
+  return result.join(',')
 }
 
 function checkArguments(devFile, target, fsType, options, dataStr)
@@ -81,14 +91,17 @@ function checkArguments(devFile, target, fsType, options, dataStr)
 
   //ensure that options is an array or number
   if(typeof options !== 'number' && options.constructor !== Array)
-    throw new Error('Argument options must be an array or number')
+    throw new Error('Argument options must be an array or a number')
 
-  //ensure that dataStr is a string
-  if(typeof dataStr !== 'string')
-    throw new Error('Argument dataStr must be a string')
+  //ensure that dataStr is a string or a literal object
+  if(typeof dataStr !== 'string' && dataStr.constructor !== Object)
+    throw new Error('Argument dataStr must be a string or an object')
 
-  if(options.constructor !== Number)
-    options = __makeMountFlags(options)
+  if(options instanceof Array)
+    options = makeMountFlags(options)
+
+  if(dataStr.constructor === Object)
+    dataStr = makeMountDataStr(dataStr)
 
   return [devFile, target, fsType, options, dataStr]
 }
