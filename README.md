@@ -64,7 +64,7 @@ mount.umount('myDir', function(err) {
 ```
 
 ##Installation
-This package is not featured in NPM (yet), so you have to add this file in your package.json
+This package is not featured in NPM (yet), so you have to add this dependency line to your package.json
 file:
 
 **Part of package.json:**
