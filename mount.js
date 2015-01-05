@@ -1,8 +1,12 @@
 "use strict";
 
-var _binding = require('./build/Release/mount')
+
+var fs = require('fs')
 
 var detectSeries = require('async').detectSeries
+
+var _binding = require('./build/Release/mount')
+
 
 module.exports = {
     _binding: _binding,
@@ -70,16 +74,30 @@ function makeMountDataStr(object)
   return result.join(',')
 }
 
-function checkArguments(devFile, target, fsType, options, dataStr)
+function checkArguments(devFile, target, fsType, options, dataStr, callback)
 {
   if(devFile === undefined) throw new Error('devFile is mandatory')
   if(target  === undefined) throw new Error('target is mandatory')
 
   if(typeof fsType === 'number' || fsType instanceof Array)
   {
-    dataStr = options
-    options = fsType
-    fsType  = undefined
+    callback = dataStr
+    dataStr  = options
+    options  = fsType
+    fsType   = undefined
+  }
+
+  if(options.constructor.name === 'Object')
+  {
+    callback = dataStr
+    dataStr  = options
+    options  = undefined
+  }
+
+  if(dataStr instanceof Function)
+  {
+    callback = dataStr
+    dataStr  = undefined
   }
 
   // default values
@@ -89,11 +107,15 @@ function checkArguments(devFile, target, fsType, options, dataStr)
 
   //ensure that options is an array or number
   if(typeof options !== 'number' && options.constructor !== Array)
-    throw new Error('Argument options must be an array or a number')
+    throw new Error('options must be an array or a number, not '+typeof options)
 
   //ensure that dataStr is a string or a literal object
   if(typeof dataStr !== 'string' && dataStr.constructor !== Object)
-    throw new Error('Argument dataStr must be a string or an object')
+    throw new Error('dataStr must be a string or an object, not '+typeof dataStr)
+
+  //Last param is always callback
+  if(typeof callback !== 'function')
+    throw new Error('Last argument must be a callback function')
 
   if(options instanceof Array)
     options = makeMountFlags(options)
@@ -101,43 +123,35 @@ function checkArguments(devFile, target, fsType, options, dataStr)
   if(dataStr.constructor === Object)
     dataStr = makeMountDataStr(dataStr)
 
-  return [devFile, target, fsType, options, dataStr]
+  return [devFile, target, fsType, options, dataStr, callback]
 }
 
-function filterNoDev(value)
+function removeNoDev(value)
 {
-  return value.indexOf('nodev') > -1
+  return value && value.indexOf('nodev') < 0
+}
+
+function trim(value)
+{
+  return value.trim()
 }
 
 function _mount(devFile, target, fsType, options, dataStr, cb) {
-  var argc = arguments.length
+  var argv = checkArguments(devFile, target, fsType, options, dataStr, cb)
 
-  //Last param is always callback
-  if(typeof arguments[argc-1] !== 'function')
-    throw new Error('Last argument must be a callback function')
-
-  cb = arguments[argc-1]
-
-  switch(argc)
-  {
-    case 3: fsType  = undefined; break
-    case 4: options = undefined; break
-    case 5: dataStr = undefined; break
-  }
-
-  var argv = checkArguments(devFile, target, fsType, options, dataStr)
+  cb = argv[5]
 
   if(argv[2] == 'auto')
     fs.readFile('/proc/filesystems', 'utf8', function(error, data)
     {
       if(error) return cb(error)
 
-      var filesystems = data.split('/n').filter(filterNoDev)
+      var filesystems = data.split('\n').filter(removeNoDev).map(trim)
 
       detectSeries(filesystems, function(item, callback)
       {
         argv[2] = item
-        argv[6] = function(error)
+        argv[5] = function(error)
         {
           callback(!error)
         }
@@ -150,11 +164,7 @@ function _mount(devFile, target, fsType, options, dataStr, cb) {
       })
     })
   else
-  {
-    argv.push(cb)
-
     _binding.mount.apply(_binding, argv)
-  }
 }
 
 function _umount(target, cb) {
