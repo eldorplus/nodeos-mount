@@ -9,6 +9,8 @@ module.exports = {
 
     mount: _mount,
     umount: _umount,
+    mountSync: _mountSync,
+    umountSync: _umountSync,
 
     MS_RDONLY: 1,
     MS_NOSUID: 2,
@@ -144,6 +146,25 @@ function _mount(devFile, target, fsType, options, dataStr, cb) {
   }
 }
 
+function _mountSync(devFile, target, fsType, options, dataStr) {
+  var argv = checkArguments(devFile, target, fsType, options, dataStr)
+
+  if(argv[2] == 'auto')
+  {
+    var filesystems = fs.readFileSync('/proc/filesystems', 'utf8')
+
+    filesystems = filesystems.split('/n').filter(filterNoDev)
+
+    for(var index=0; argv[2]=filesystems[index]; index++)
+      if(_binding.mountSync.apply(_binding, argv))
+        return true
+
+    throw new Error('Unknown filesystem for ' + devFile ? devFile : target)
+  }
+
+  return _binding.mountSync.apply(_binding, argv)
+}
+
 function _umount(target, cb) {
     //Require exactly 2 parameters
     if(arguments.length !== 2 || typeof cb !== 'function') {
@@ -151,4 +172,13 @@ function _umount(target, cb) {
     }
 
     _binding.umount(target, cb)
+}
+
+function _umountSync(target) {
+    //Require exactly 1 parameter
+    if(typeof target !== 'string') {
+        throw new Error('Invalid arguments')
+    }
+
+    return _binding.umountSync(target)
 }
