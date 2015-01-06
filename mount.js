@@ -115,10 +115,6 @@ function checkArguments(devFile, target, fsType, options, dataStr, callback)
   if(typeof dataStr !== 'string' && dataStr.constructor !== Object)
     throw new Error('dataStr must be a string or an object, not '+typeof dataStr)
 
-  //Last param is always callback
-  if(typeof callback !== 'function')
-    throw new Error('Last argument must be a callback function')
-
   if(options instanceof Array)
     options = makeMountFlags(options)
 
@@ -138,17 +134,26 @@ function trim(value)
   return value.trim()
 }
 
+function fsList(data)
+{
+  return data.split('\n').filter(removeNoDev).map(trim)
+}
+
 function _mount(devFile, target, fsType, options, dataStr, cb) {
   var argv = checkArguments(devFile, target, fsType, options, dataStr, cb)
 
   cb = argv[5]
 
-  if(argv[2] == 'auto')
-    fs.readFile('/proc/filesystems', 'utf8', function(error, data)
+  //Last param is always callback
+  if(typeof cb !== 'function')
+    throw new Error('Last argument must be a callback function')
+
+  if(argv[2] == 'auto' && !(argv[3] & module.exports.MS_MOVE))
+    fs.readFile('/proc/filesystems', 'utf8', function(error, filesystems)
     {
       if(error) return cb(error)
 
-      var filesystems = data.split('\n').filter(removeNoDev).map(trim)
+      filesystems = fsList(filesystems)
 
       detectSeries(filesystems, function(item, callback)
       {
@@ -172,11 +177,13 @@ function _mount(devFile, target, fsType, options, dataStr, cb) {
 function _mountSync(devFile, target, fsType, options, dataStr) {
   var argv = checkArguments(devFile, target, fsType, options, dataStr)
 
-  if(argv[2] == 'auto')
+  argv.length = 5
+
+  if(argv[2] == 'auto' && !(argv[3] & module.exports.MS_MOVE))
   {
     var filesystems = fs.readFileSync('/proc/filesystems', 'utf8')
 
-    filesystems = filesystems.split('/n').filter(filterNoDev)
+    filesystems = fsList(filesystems)
 
     for(var index=0; argv[2]=filesystems[index]; index++)
       if(_binding.mountSync.apply(_binding, argv))

@@ -13,7 +13,7 @@
     "device",
     "async"
   ],
-  "version": "0.1.6",
+  "version": "0.1.12",
   "homepage": "https://github.com/hertzg/node-mount",
   "bugs": "https://github.com/hertzg/node-mount/issues",
   "repository": {
