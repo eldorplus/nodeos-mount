@@ -9,10 +9,10 @@
 using namespace v8;
 
 struct Mounty {
-    //All values except target are only used by mount
+    // All values except target are only used by mount
     std::string devFile;
     std::string fsType;
-    std::string target; //used by umount
+    std::string target; // used by umount
     std::string data;
     long flags;
     int error;
@@ -81,16 +81,19 @@ public:
         }
 
         callback->Call(1, argv);
+
+        delete mounty;
     }
 
 private:
     Mounty *mounty;
 };
 
-//        0         1       2       3       4   5
-//mount(devFile, target, fsType, options, data, cb)
+//         0         1       2       3       4   5
+// mount(devFile, target, fsType, options, data, cb)
 NAN_METHOD(Mount) {
     NanScope();
+
     if (args.Length() != 6) {
         return NanThrowError("Invalid number of arguments (must be 6)");
     }
@@ -101,7 +104,7 @@ NAN_METHOD(Mount) {
     Local<Integer> options = args[3]->ToInteger();
     String::Utf8Value dataStr(args[4]->ToString());
 
-    //Prepare data for the async work
+    // Prepare data for the async work
     Mounty* mounty = new Mounty();
     mounty->devFile = std::string(*devFile);
     mounty->target = std::string(*target);
@@ -124,7 +127,7 @@ NAN_METHOD(Umount) {
 
     String::Utf8Value target(args[0]->ToString());
 
-    //Prepare data for the async work
+    // Prepare data for the async work
     Mounty* mounty = new Mounty();
     mounty->target = std::string(*target);
 
@@ -135,11 +138,67 @@ NAN_METHOD(Umount) {
 }
 
 
+NAN_METHOD(MountSync) {
+    NanScope();
+
+    if (args.Length() != 5) {
+        return NanThrowError("Invalid number of arguments (must be 5)");
+    }
+
+    String::Utf8Value devFile(args[0]->ToString());
+    String::Utf8Value target(args[1]->ToString());
+    String::Utf8Value fsType(args[2]->ToString());
+    Handle<Integer> options = args[3]->ToInteger();
+    String::Utf8Value dataStr(args[4]->ToString());
+
+    std::string s_devFile(*devFile);
+    std::string s_target(*target);
+    std::string s_fsType(*fsType);
+    std::string s_dataStr(*dataStr);
+
+    int ret = mount(s_devFile.c_str(),
+                    s_target.c_str(),
+                    s_fsType.c_str(),
+                    options->Value(),
+                    s_dataStr.c_str());
+
+    if (ret != 0) {
+        return NanThrowError(node::ErrnoException(errno, "mount", "", s_devFile.c_str()));
+    }
+
+    NanReturnValue(NanTrue());
+}
+
+
+NAN_METHOD(UmountSync) {
+    NanScope();
+
+    if (args.Length() != 1) {
+        return NanThrowError("Invalid number of arguments (must be 1)");
+    }
+
+    String::Utf8Value target(args[0]->ToString());
+
+    std::string s_target(*target);
+
+    int ret = umount(s_target.c_str());
+    if (ret != 0) {
+        return NanThrowError(node::ErrnoException(errno, "umount", "", s_target.c_str()));
+    }
+
+    NanReturnValue(NanTrue());
+}
+
+
 void init (Handle<Object> exports) {
     exports->Set(NanNew<String>("mount"),
         NanNew<FunctionTemplate>(Mount)->GetFunction());
     exports->Set(NanNew<String>("umount"),
         NanNew<FunctionTemplate>(Umount)->GetFunction());
+    exports->Set(NanNew<String>("mountSync"),
+        NanNew<FunctionTemplate>(MountSync)->GetFunction());
+    exports->Set(NanNew<String>("umountSync"),
+        NanNew<FunctionTemplate>(UmountSync)->GetFunction());
 }
 
 NODE_MODULE(mount, init)
