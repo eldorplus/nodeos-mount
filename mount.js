@@ -8,63 +8,82 @@ var detectSeries = require('async').detectSeries
 var _binding = require('./build/Release/mount')
 
 
-module.exports = {
-    _binding: _binding,
+module.exports =
+{
+  _binding: _binding,
 
-    mount: _mount,
-    umount: _umount,
-    mountSync: _mountSync,
-    umountSync: _umountSync,
+  mount:      _mount,
+  umount:     _umount,
+  mountSync:  _mountSync,
+  umountSync: _umountSync,
 
-    MS_RDONLY: 1,
-    MS_NOSUID: 2,
-    MS_NODEV: 4,
-    MS_NOEXEC: 8,
-    MS_SYNCHRONOUS: 16,
-    MS_REMOUNT: 32,
-    MS_MANDLOCK: 64,
-    MS_DIRSYNC: 128,
+  MS_RDONLY:       1,
+  MS_NOSUID:       2,
+  MS_NODEV:        4,
+  MS_NOEXEC:       8,
+  MS_SYNCHRONOUS: 16,
+  MS_REMOUNT:     32,
+  MS_MANDLOCK:    64,
+  MS_DIRSYNC:    128,
 
-    MS_NOATIME: 1024,
-    MS_NODIRATIME: 2048,
-    MS_BIND: 4096,
-    MS_MOVE: 8192,
-    MS_REC: 16384,
-    MS_VERBOSE: 32768,
-    MS_SILENT: 32768,
-    MS_POSIXACL: (1<<16),
-    MS_UNBINDABLE: (1<<17),
-    MS_PRIVATE: (1<<18),
-    MS_SLAVE: (1<<19),
-    MS_SHARED: (1<<20),
-    MS_RELATIME: (1<<21),
-    MS_KERNMOUNT: (1<<22),
-    MS_I_VERSION: (1<<23),
-    MS_STRICTATIME: (1<<24),
-    MS_NOSEC: (1<<28),
-    MS_BORN: (1<<29),
-    MS_ACTIVE: (1<<30),
-    MS_NOUSER: (1<<31),
+  MS_NOATIME:    1024,
+  MS_NODIRATIME: 2048,
+  MS_BIND:       4096,
+  MS_MOVE:       8192,
+  MS_REC:       16384,
+  MS_VERBOSE:   32768,
+  MS_SILENT:    32768,
+
+  MS_POSIXACL:    (1<<16),
+  MS_UNBINDABLE:  (1<<17),
+  MS_PRIVATE:     (1<<18),
+  MS_SLAVE:       (1<<19),
+  MS_SHARED:      (1<<20),
+  MS_RELATIME:    (1<<21),
+  MS_KERNMOUNT:   (1<<22),
+  MS_I_VERSION:   (1<<23),
+  MS_STRICTATIME: (1<<24),
+  MS_NOSEC:       (1<<28),
+  MS_BORN:        (1<<29),
+  MS_ACTIVE:      (1<<30),
+  MS_NOUSER:      (1<<31),
 }
 
-function makeMountFlags(array) {
-    var flags = 0
-    for(var i=0; i<array.length; i++) {
-        var option = array[i].toLowerCase()
-        if(option == "bind") {
-            flags |= module.exports.MS_BIND;
-        } else if(option == "readonly") {
-            flags |= module.exports.MS_RDONLY;
-        } else if(option == "remount") {
-            flags |= module.exports.MS_REMOUNT;
-        } else if(option == "noexec"){
-            flags |= module.exports.MS_NOEXEC;
-        } else {
-            throw new Error("Invalid option: "+option);
-        }
-    }
-    return flags
+
+function makeMountFlags_reduce(flags, option)
+{
+  option = option.toLowerCase()
+
+  switch(option)
+  {
+    case "bind":
+      flags |= module.exports.MS_BIND;
+    break
+
+    case "readonly":
+      flags |= module.exports.MS_RDONLY;
+    break
+
+    case "remount":
+      flags |= module.exports.MS_REMOUNT;
+    break
+
+    case "noexec":
+      flags |= module.exports.MS_NOEXEC;
+    break
+
+    default:
+      throw new Error("Invalid option: "+option);
+  }
+
+  return flags
 }
+
+function makeMountFlags(array)
+{
+  return array.reduce(makeMountFlags_reduce, 0)
+}
+
 
 function makeMountDataStr(object)
 {
@@ -75,6 +94,7 @@ function makeMountDataStr(object)
 
   return result.join(',')
 }
+
 
 function checkArguments(devFile, target, fsType, options, dataStr, callback)
 {
@@ -89,7 +109,7 @@ function checkArguments(devFile, target, fsType, options, dataStr, callback)
     fsType   = undefined
   }
 
-  if(options.constructor.name === 'Object')
+  if(options.constructor.name === 'Object' || options instanceof Function)
   {
     callback = dataStr
     dataStr  = options
@@ -124,6 +144,7 @@ function checkArguments(devFile, target, fsType, options, dataStr, callback)
   return [devFile, target, fsType, options, dataStr, callback]
 }
 
+
 function removeNoDev(value)
 {
   return value && value.indexOf('nodev') < 0
@@ -139,7 +160,9 @@ function fsList(data)
   return data.split('\n').filter(removeNoDev).map(trim)
 }
 
-function _mount(devFile, target, fsType, options, dataStr, cb) {
+
+function _mount(devFile, target, fsType, options, dataStr, cb)
+{
   var argv = checkArguments(devFile, target, fsType, options, dataStr, cb)
 
   cb = argv[5]
@@ -174,7 +197,8 @@ function _mount(devFile, target, fsType, options, dataStr, cb) {
     _binding.mount.apply(_binding, argv)
 }
 
-function _mountSync(devFile, target, fsType, options, dataStr) {
+function _mountSync(devFile, target, fsType, options, dataStr)
+{
   var argv = checkArguments(devFile, target, fsType, options, dataStr)
 
   argv.length = 5
@@ -195,20 +219,20 @@ function _mountSync(devFile, target, fsType, options, dataStr) {
   return _binding.mountSync.apply(_binding, argv)
 }
 
-function _umount(target, cb) {
-    //Require exactly 2 parameters
-    if(arguments.length !== 2 || typeof cb !== 'function') {
-        throw new Error('Invalid arguments')
-    }
+function _umount(target, cb)
+{
+  //Require exactly 2 parameters
+  if(arguments.length !== 2 || typeof cb !== 'function')
+    throw new Error('Invalid arguments')
 
-    _binding.umount(target, cb)
+  _binding.umount(target, cb)
 }
 
-function _umountSync(target) {
-    //Require exactly 1 parameter
-    if(typeof target !== 'string') {
-        throw new Error('Invalid arguments')
-    }
+function _umountSync(target)
+{
+  //Require exactly 1 parameter
+  if(typeof target !== 'string')
+    throw new Error('Invalid arguments')
 
-    return _binding.umountSync(target)
+  return _binding.umountSync(target)
 }
