@@ -51,12 +51,12 @@
     "nan": "*"
   },
   "devDependencies": {
-    "mocha": "~1.18.2",
-    "chai": "~1.9.1",
-    "grunt": "~0.4.4",
-    "grunt-mocha-test": "~0.10.2",
+    "mocha": "~2.2.0",
+    "chai": "~2.1.1",
+    "grunt": "~0.4.5",
+    "grunt-mocha-test": "~0.12.7",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-node-gyp": "~0.3.0",
-    "q": "~1.0.1"
+    "grunt-node-gyp": "~1.0.0",
+    "q": "~1.2.0"
   }
 }

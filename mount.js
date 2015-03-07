@@ -160,7 +160,7 @@ function trim(value)
 
 function removeDuplicates(item, pos, self)
 {
-  return self.indexOf(item) == pos;
+  return self.indexOf(item) === pos;
 }
 
 function fsList(data)
@@ -181,7 +181,7 @@ function _mount(devFile, target, fsType, options, dataStr, cb)
   if(typeof cb !== 'function')
     throw new Error('Last argument must be a callback function')
 
-  if(argv[2] == 'auto' && !(argv[3] & module.exports.MS_MOVE))
+  if(argv[2] === 'auto' && !(argv[3] & module.exports.MS_MOVE))
     fs.readFile('/proc/filesystems', 'utf8', function(error, filesystems)
     {
       if(error) return cb(error)
@@ -213,13 +213,13 @@ function _mountSync(devFile, target, fsType, options, dataStr)
 
   argv.length = 5
 
-  if(argv[2] == 'auto' && !(argv[3] & module.exports.MS_MOVE))
+  if(argv[2] === 'auto' && !(argv[3] & module.exports.MS_MOVE))
   {
     var filesystems = fs.readFileSync('/proc/filesystems', 'utf8')
 
     filesystems = fsList(filesystems)
 
-    for(var index=0; argv[2]=filesystems[index]; index++)
+    for(argv[2] in filesystems)
       if(_binding.mountSync.apply(_binding, argv))
         return true
 

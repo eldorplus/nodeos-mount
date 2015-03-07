@@ -13,6 +13,14 @@ var Q = require("q");
 
 var TMP_DIR = path.join(__dirname, "tmp");
 
+
+function expectErrToBeNotOk(done, err)
+{
+  expect(err).to.be.not.ok;
+  done();
+}
+
+
 describe("mount", function(){
     //Create the target directory for mounting
     before(function(){
@@ -66,20 +74,14 @@ describe("mount", function(){
         });
 
         it("should mount tmpfs", function(done){
-            mount.mount("tmpfs", TMP_DIR, "tmpfs", function(err){
-                expect(err).to.be.not.ok;
-                done();
-            });
+            mount.mount("tmpfs", TMP_DIR, "tmpfs", expectErrToBeNotOk.bind(undefined, done));
         });
 
         it("should mount / remount tmpfs with flags", function(done){
             mount.mount("tmpfs", TMP_DIR, "tmpfs", ["readonly", "noexec"], function(err){
                 expect(err).to.be.not.ok;
 
-                mount.mount("tmpfs", TMP_DIR, "tmpfs", ["remount"], function(err){
-                    expect(err).to.be.not.ok;
-                    done();
-                });
+                mount.mount("tmpfs", TMP_DIR, "tmpfs", ["remount"], expectErrToBeNotOk.bind(undefined, done));
             });
         });
 
@@ -94,10 +96,7 @@ describe("mount", function(){
             mount.mount("tmpfs", TMP_DIR, "tmpfs", function(err){
                 expect(err).to.be.not.ok;
 
-                mount.umount(TMP_DIR, function(err){
-                    expect(err).to.be.not.ok;
-                    done();
-                });
+                mount.umount(TMP_DIR, expectErrToBeNotOk.bind(undefined, done));
             });
         });
 
