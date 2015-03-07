@@ -17,6 +17,8 @@ module.exports =
   mountSync:  _mountSync,
   umountSync: _umountSync,
 
+  overrideOrder: ['ext4', 'ext3', 'ext2'],
+
   MS_RDONLY:       1,
   MS_NOSUID:       2,
   MS_NODEV:        4,
@@ -155,9 +157,17 @@ function trim(value)
   return value.trim()
 }
 
+
+function removeDuplicates(item, pos, self)
+{
+  return self.indexOf(item) == pos;
+}
+
 function fsList(data)
 {
-  return data.split('\n').filter(removeNoDev).map(trim)
+  var supported = data.split('\n').filter(removeNoDev).map(trim)
+
+  return module.exports.overrideOrder.concat(supported).filter(removeDuplicates)
 }
 
 
