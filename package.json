@@ -13,12 +13,12 @@
     "device",
     "async"
   ],
-  "version": "0.1.13",
-  "homepage": "https://github.com/hertzg/node-mount",
-  "bugs": "https://github.com/hertzg/node-mount/issues",
+  "version": "0.1.14",
+  "homepage": "https://github.com/NodeOS/nodeos-mount",
+  "bugs": "https://github.com/NodeOS/nodeos-mount/issues",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hertzg/node-mount.git"
+    "url": "git://github.com/NodeOS/nodeos-mount.git"
   },
   "engines": {
     "node": ">=0.8.0"
@@ -47,16 +47,16 @@
   "gypfile": true,
   "readmeFilename": "README.md",
   "dependencies": {
-    "async": "^0.9.0",
-    "nan": "*"
+    "async": "^1.4.2",
+    "nan": "^1.9.0"
   },
   "devDependencies": {
-    "mocha": "~2.2.0",
-    "chai": "~2.1.1",
+    "mocha": "~2.3.3",
+    "chai": "~3.2.0",
     "grunt": "~0.4.5",
     "grunt-mocha-test": "~0.12.7",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-node-gyp": "~1.0.0",
-    "q": "~1.2.0"
+    "grunt-node-gyp": "~3.0.0",
+    "q": "~1.4.1"
   }
 }
