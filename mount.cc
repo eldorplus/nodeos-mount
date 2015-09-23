@@ -9,196 +9,196 @@
 using namespace v8;
 
 struct Mounty {
-    // All values except target are only used by mount
-    std::string devFile;
-    std::string fsType;
-    std::string target; // used by umount
-    std::string data;
-    long flags;
-    int error;
+  // All values except target are only used by mount
+  std::string devFile;
+  std::string fsType;
+  std::string target; // used by umount
+  std::string data;
+  long flags;
+  int error;
 };
 
-class MountWorker : public NanAsyncWorker {
+class MountWorker : public Nan::AsyncWorker {
 public:
-    MountWorker(NanCallback *callback, Mounty *mounty)
-        : NanAsyncWorker(callback), mounty(mounty) {}
-    ~MountWorker() {}
+  MountWorker(Nan::Callback *callback, Mounty *mounty)
+    : Nan::AsyncWorker(callback), mounty(mounty) {}
+  ~MountWorker() {}
 
-    // This function is executed in another thread at some point after it has been
-    // scheduled. IT MUST NOT USE ANY V8 FUNCTIONALITY.
-    void Execute() {
-        int ret = mount(mounty->devFile.c_str(),
-                        mounty->target.c_str(),
-                        mounty->fsType.c_str(),
-                        mounty->flags,
-                        mounty->data.c_str());
+  // This function is executed in another thread at some point after it has been
+  // scheduled. IT MUST NOT USE ANY V8 FUNCTIONALITY.
+  void Execute() {
+    int ret = mount(mounty->devFile.c_str(),
+            mounty->target.c_str(),
+            mounty->fsType.c_str(),
+            mounty->flags,
+            mounty->data.c_str());
 
-        if (ret == -1) {
-            mounty->error = errno;
-        }
+    if (ret == -1) {
+      mounty->error = errno;
+    }
+  }
+
+  void HandleOKCallback() {
+    Nan::HandleScope scope;
+
+    Local<Value> argv[] = {
+      Nan::Null()
+    };
+
+    if (mounty->error > 0) {
+      argv[0] = Nan::NanErrnoException(mounty->error, "mount", "", mounty->devFile.c_str());
     }
 
-    void HandleOKCallback() {
-        NanScope();
-
-        Local<Value> argv[] = {
-            NanNull()
-        };
-
-        if (mounty->error > 0) {
-            argv[0] = node::ErrnoException(mounty->error, "mount", "", mounty->devFile.c_str());
-        }
-
-        callback->Call(1, argv);
-    }
+    callback->Call(1, argv);
+  }
 
 private:
-    Mounty *mounty;
+  Mounty *mounty;
 };
 
-class UmountWorker : public NanAsyncWorker {
+class UmountWorker : public Nan::AsyncWorker {
 public:
-    UmountWorker(NanCallback *callback, Mounty *mounty)
-        : NanAsyncWorker(callback), mounty(mounty) {}
-    ~UmountWorker() {}
+  UmountWorker(Nan::Callback *callback, Mounty *mounty)
+    : Nan::AsyncWorker(callback), mounty(mounty) {}
+  ~UmountWorker() {}
 
-    void Execute() {
-        int ret = umount(mounty->target.c_str());
+  void Execute() {
+    int ret = umount(mounty->target.c_str());
 
-        if (ret == -1) {
-            mounty->error = errno;
-        }
+    if (ret == -1) {
+      mounty->error = errno;
+    }
+  }
+
+  void HandleOKCallback() {
+    Nan::HandleScope scope;
+    Local<Value> argv[] = {
+      Nan::Null()
+    };
+
+    if (mounty->error > 0) {
+      argv[0] = Nan::NanErrnoException(mounty->error, "umount", "", mounty->target.c_str());
     }
 
-    void HandleOKCallback() {
-        NanScope();
-        Local<Value> argv[] = {
-            NanNull()
-        };
+    callback->Call(1, argv);
 
-        if (mounty->error > 0) {
-            argv[0] = node::ErrnoException(mounty->error, "umount", "", mounty->target.c_str());
-        }
-
-        callback->Call(1, argv);
-
-        delete mounty;
-    }
+    delete mounty;
+  }
 
 private:
-    Mounty *mounty;
+  Mounty *mounty;
 };
 
-//         0         1       2       3       4   5
+//       0       1      2      3      4   5
 // mount(devFile, target, fsType, options, data, cb)
 NAN_METHOD(Mount) {
-    NanScope();
+  Nan::HandleScope scope;
 
-    if (args.Length() != 6) {
-        return NanThrowError("Invalid number of arguments (must be 6)");
-    }
+  if (info.Length() != 6) {
+    return Nan::ThrowError("Invalid number of arguments (must be 6)");
+  }
 
-    String::Utf8Value devFile(args[0]->ToString());
-    String::Utf8Value target(args[1]->ToString());
-    String::Utf8Value fsType(args[2]->ToString());
-    Local<Integer> options = args[3]->ToInteger();
-    String::Utf8Value dataStr(args[4]->ToString());
+  String::Utf8Value devFile(info[0]->ToString());
+  String::Utf8Value target(info[1]->ToString());
+  String::Utf8Value fsType(info[2]->ToString());
+  Local<Integer> options = info[3]->ToInteger();
+  String::Utf8Value dataStr(info[4]->ToString());
 
-    // Prepare data for the async work
-    Mounty* mounty = new Mounty();
-    mounty->devFile = std::string(*devFile);
-    mounty->target = std::string(*target);
-    mounty->fsType = std::string(*fsType);
-    mounty->flags = options->Value();
-    mounty->data = std::string(*dataStr);
+  // Prepare data for the async work
+  Mounty* mounty = new Mounty();
+  mounty->devFile = std::string(*devFile);
+  mounty->target = std::string(*target);
+  mounty->fsType = std::string(*fsType);
+  mounty->flags = options->Value();
+  mounty->data = std::string(*dataStr);
 
-    NanCallback *callback = new NanCallback(args[5].As<Function>());
+  Nan::Callback *callback = new Nan::Callback(info[5].As<Function>());
 
-    NanAsyncQueueWorker(new MountWorker(callback, mounty));
-    NanReturnUndefined();
+  Nan::AsyncQueueWorker(new MountWorker(callback, mounty));
+  return;
 }
 
 NAN_METHOD(Umount) {
-    NanScope();
+  Nan::HandleScope scope;
 
-    if (args.Length() != 2) {
-        return NanThrowError("Invalid number of arguments (must be 2)");
-    }
+  if (info.Length() != 2) {
+    return Nan::ThrowError("Invalid number of arguments (must be 2)");
+  }
 
-    String::Utf8Value target(args[0]->ToString());
+  String::Utf8Value target(info[0]->ToString());
 
-    // Prepare data for the async work
-    Mounty* mounty = new Mounty();
-    mounty->target = std::string(*target);
+  // Prepare data for the async work
+  Mounty* mounty = new Mounty();
+  mounty->target = std::string(*target);
 
-    NanCallback *callback = new NanCallback(args[1].As<Function>());
+  Nan::Callback *callback = new Nan::Callback(info[1].As<Function>());
 
-    NanAsyncQueueWorker(new UmountWorker(callback, mounty));
-    NanReturnUndefined();
+  Nan::AsyncQueueWorker(new UmountWorker(callback, mounty));
+  return;
 }
 
 
 NAN_METHOD(MountSync) {
-    NanScope();
+  Nan::HandleScope scope;
 
-    if (args.Length() != 5) {
-        return NanThrowError("Invalid number of arguments (must be 5)");
-    }
+  if (info.Length() != 5) {
+    return Nan::ThrowError("Invalid number of arguments (must be 5)");
+  }
 
-    String::Utf8Value devFile(args[0]->ToString());
-    String::Utf8Value target(args[1]->ToString());
-    String::Utf8Value fsType(args[2]->ToString());
-    Handle<Integer> options = args[3]->ToInteger();
-    String::Utf8Value dataStr(args[4]->ToString());
+  String::Utf8Value devFile(info[0]->ToString());
+  String::Utf8Value target(info[1]->ToString());
+  String::Utf8Value fsType(info[2]->ToString());
+  Handle<Integer> options = info[3]->ToInteger();
+  String::Utf8Value dataStr(info[4]->ToString());
 
-    std::string s_devFile(*devFile);
-    std::string s_target(*target);
-    std::string s_fsType(*fsType);
-    std::string s_dataStr(*dataStr);
+  std::string s_devFile(*devFile);
+  std::string s_target(*target);
+  std::string s_fsType(*fsType);
+  std::string s_dataStr(*dataStr);
 
-    int ret = mount(s_devFile.c_str(),
-                    s_target.c_str(),
-                    s_fsType.c_str(),
-                    options->Value(),
-                    s_dataStr.c_str());
+  int ret = mount(s_devFile.c_str(),
+          s_target.c_str(),
+          s_fsType.c_str(),
+          options->Value(),
+          s_dataStr.c_str());
 
-    if (ret != 0) {
-        return NanThrowError(node::ErrnoException(errno, "mount", "", s_devFile.c_str()));
-    }
+  if (ret != 0) {
+    return Nan::ThrowError(Nan::NanErrnoException(errno, "mount", "", s_devFile.c_str()));
+  }
 
-    NanReturnValue(NanTrue());
+  info.GetReturnValue().Set(Nan::True());
 }
 
 
 NAN_METHOD(UmountSync) {
-    NanScope();
+  Nan::HandleScope scope;
 
-    if (args.Length() != 1) {
-        return NanThrowError("Invalid number of arguments (must be 1)");
-    }
+  if (info.Length() != 1) {
+    return Nan::ThrowError("Invalid number of arguments (must be 1)");
+  }
 
-    String::Utf8Value target(args[0]->ToString());
+  String::Utf8Value target(info[0]->ToString());
 
-    std::string s_target(*target);
+  std::string s_target(*target);
 
-    int ret = umount(s_target.c_str());
-    if (ret != 0) {
-        return NanThrowError(node::ErrnoException(errno, "umount", "", s_target.c_str()));
-    }
+  int ret = umount(s_target.c_str());
+  if (ret != 0) {
+    return Nan::ThrowError(Nan::NanErrnoException(errno, "umount", "", s_target.c_str()));
+  }
 
-    NanReturnValue(NanTrue());
+  info.GetReturnValue().Set(Nan::True());
 }
 
 
 void init (Handle<Object> exports) {
-    exports->Set(NanNew<String>("mount"),
-        NanNew<FunctionTemplate>(Mount)->GetFunction());
-    exports->Set(NanNew<String>("umount"),
-        NanNew<FunctionTemplate>(Umount)->GetFunction());
-    exports->Set(NanNew<String>("mountSync"),
-        NanNew<FunctionTemplate>(MountSync)->GetFunction());
-    exports->Set(NanNew<String>("umountSync"),
-        NanNew<FunctionTemplate>(UmountSync)->GetFunction());
+  exports->Set(Nan::New<String>("mount").ToLocalChecked(),
+    Nan::New<FunctionTemplate>(Mount)->GetFunction());
+  exports->Set(Nan::New<String>("umount").ToLocalChecked(),
+    Nan::New<FunctionTemplate>(Umount)->GetFunction());
+  exports->Set(Nan::New<String>("mountSync").ToLocalChecked(),
+    Nan::New<FunctionTemplate>(MountSync)->GetFunction());
+  exports->Set(Nan::New<String>("umountSync").ToLocalChecked(),
+    Nan::New<FunctionTemplate>(UmountSync)->GetFunction());
 }
 
 NODE_MODULE(mount, init)
