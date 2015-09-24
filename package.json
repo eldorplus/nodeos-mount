@@ -13,7 +13,7 @@
     "device",
     "async"
   ],
-  "version": "0.1.14",
+  "version": "0.1.15",
   "homepage": "https://github.com/NodeOS/nodeos-mount",
   "bugs": "https://github.com/NodeOS/nodeos-mount/issues",
   "repository": {

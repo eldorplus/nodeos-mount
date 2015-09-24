@@ -111,7 +111,8 @@ function checkArguments(devFile, target, fsType, options, dataStr, callback)
     fsType   = undefined
   }
 
-  if(options.constructor.name === 'Object' || options instanceof Function)
+  if(options != undefined && options.constructor.name === 'Object'
+  || options instanceof Function)
   {
     callback = dataStr
     dataStr  = options
