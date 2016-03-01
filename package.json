@@ -13,7 +13,7 @@
     "device",
     "async"
   ],
-  "version": "0.1.15",
+  "version": "0.2.0",
   "homepage": "https://github.com/NodeOS/nodeos-mount",
   "bugs": "https://github.com/NodeOS/nodeos-mount/issues",
   "repository": {
@@ -47,12 +47,12 @@
   "gypfile": true,
   "readmeFilename": "README.md",
   "dependencies": {
-    "async": "^1.4.2",
-    "nan": "^2.0.9"
+    "async": "^1.5.2",
+    "nan": "^2.2.0"
   },
   "devDependencies": {
-    "mocha": "~2.3.3",
-    "chai": "~3.2.0",
+    "mocha": "~2.4.5",
+    "chai": "~3.5.0",
     "grunt": "~0.4.5",
     "grunt-mocha-test": "~0.12.7",
     "grunt-contrib-watch": "~0.6.1",
