@@ -27,7 +27,7 @@ public:
   // This function is executed in another thread at some point after it has been
   // scheduled. IT MUST NOT USE ANY V8 FUNCTIONALITY.
   void Execute() {
-    #ifdef __linux
+    #ifdef __linux__
       int ret = mount(mounty->devFile.c_str(),
               mounty->target.c_str(),
               mounty->fsType.c_str(),
@@ -173,7 +173,7 @@ NAN_METHOD(MountSync) {
   #ifdef __linux__
     int ret = mount(s_devFile.c_str(),
             s_target.c_str(),
-            mounty->fsType.c_str(),
+            s_fsType.c_str(),
             options->Value(),
             s_dataStr.c_str());
   #elif __APPLE__
