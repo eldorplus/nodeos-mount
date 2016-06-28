@@ -27,11 +27,19 @@ public:
   // This function is executed in another thread at some point after it has been
   // scheduled. IT MUST NOT USE ANY V8 FUNCTIONALITY.
   void Execute() {
-    int ret = mount(mounty->devFile.c_str(),
-            mounty->target.c_str(),
-            mounty->fsType.c_str(),
-            mounty->flags,
-            mounty->data.c_str());
+    #ifdef __linux
+      int ret = mount(mounty->devFile.c_str(),
+              mounty->target.c_str(),
+              mounty->fsType.c_str(),
+              mounty->flags,
+              mounty->data.c_str());
+    #elif __APPLE__
+      int ret = mount(
+              mounty->fsType.c_str(),
+              mounty->target.c_str(),
+              mounty->flags,
+              &mounty->data);
+    #endif
 
     if (ret == -1) {
       mounty->error = errno;
@@ -63,7 +71,13 @@ public:
   ~UmountWorker() {}
 
   void Execute() {
-    int ret = umount(mounty->target.c_str());
+    #ifdef __linux__
+      int ret = umount(mounty->target.c_str());
+    #elif __APPLE__
+      int ret = unmount(
+              mounty->target.c_str(),
+              mounty->flags);
+    #endif
 
     if (ret == -1) {
       mounty->error = errno;
@@ -156,11 +170,19 @@ NAN_METHOD(MountSync) {
   std::string s_fsType(*fsType);
   std::string s_dataStr(*dataStr);
 
-  int ret = mount(s_devFile.c_str(),
-          s_target.c_str(),
-          s_fsType.c_str(),
-          options->Value(),
-          s_dataStr.c_str());
+  #ifdef __linux__
+    int ret = mount(s_devFile.c_str(),
+            s_target.c_str(),
+            mounty->fsType.c_str(),
+            options->Value(),
+            s_dataStr.c_str());
+  #elif __APPLE__
+    int ret = mount(
+            s_fsType.c_str(),
+            s_target.c_str(),
+            options->Value(),
+            &s_dataStr);
+  #endif
 
   if (ret != 0) {
     return Nan::ThrowError(Nan::NanErrnoException(errno, "mount", "", s_devFile.c_str()));
@@ -181,7 +203,14 @@ NAN_METHOD(UmountSync) {
 
   std::string s_target(*target);
 
-  int ret = umount(s_target.c_str());
+  #ifdef __linux__
+    int ret = umount(s_target.c_str());
+  #elif __APPLE__
+    int ret = unmount(
+            s_target.c_str(),
+            0);
+  #endif
+
   if (ret != 0) {
     return Nan::ThrowError(Nan::NanErrnoException(errno, "umount", "", s_target.c_str()));
   }
