@@ -44,6 +44,8 @@ describe("mount", function(){
         });
 
         it("should mount tmpfs filesystem", function(done){
+          if(process.getuid()) return this.skip()
+
             mount.mount(TMP_DIR, "tmpfs", function(err){
                 expect(err).to.be.not.ok;
                 mount.umount(TMP_DIR, done);
@@ -71,11 +73,15 @@ describe("mount", function(){
         });
 
         it("should mount tmpfs", function(done){
+          if(process.getuid()) return this.skip()
+
             mount.mount(TMP_DIR, "tmpfs",
                         expectErrToBeNotOk.bind(undefined, done));
         });
 
         it("should mount / remount tmpfs with flags", function(done){
+          if(process.getuid()) return this.skip()
+
             mount.mount(TMP_DIR, "tmpfs", ["readonly", "noexec"], function(err){
                 expect(err).to.be.not.ok;
 
@@ -91,6 +97,8 @@ describe("mount", function(){
 
     describe("#umount", function(){
         it("should umount mounting point", function(done){
+          if(process.getuid()) return this.skip()
+
             mount.mount(TMP_DIR, "tmpfs", function(err){
                 expect(err).to.be.not.ok;
 
@@ -100,6 +108,8 @@ describe("mount", function(){
 
         it("should raise error on umounting a nonexisting mountpoint",
         function(done){
+          if(process.getuid()) return this.skip()
+
             mount.umount("nonexistent", function(err){
                 expect(err).to.be.ok;
                 expect(err.message).to.be.equal("ENOENT, No such file or "+
