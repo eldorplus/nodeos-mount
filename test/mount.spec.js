@@ -32,13 +32,11 @@ describe("mount", function(){
     //Delete it afterwards
     after(function(done){
         mount.umount(TMP_DIR, function(err){
-            fs.rmdirSync(TMP_DIR);
-            done();
+          fs.rmdir(TMP_DIR, done);
         });
     });
 
     describe("#mount", function(){
-
         afterEach(function(done){
             mount.umount(TMP_DIR, function(){
                 done();
@@ -48,9 +46,7 @@ describe("mount", function(){
         it("should mount tmpfs filesystem", function(done){
             mount.mount(TMP_DIR, "tmpfs", function(err){
                 expect(err).to.be.not.ok;
-                mount.umount(TMP_DIR, function(err){
-                    done();
-                });
+                mount.umount(TMP_DIR, done);
             });
         });
 
@@ -91,7 +87,6 @@ describe("mount", function(){
         it("should throw error on wrong flag", function(){
             expect(mount.mount.bind(mount, "tmpfs", TMP_DIR, ["readonly", "fail"])).to.throw(Error);
         });
-
     });
 
     describe("#umount", function(){
