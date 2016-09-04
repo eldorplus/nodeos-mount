@@ -68,7 +68,8 @@ describe("mount", function(){
         it("should not mount on nonexisting target", function(done){
             mount.mount("notexist", "tmpfs", function(err){
                 expect(err).to.be.ok;
-                expect(err.message).to.be.equal("ENOENT, No such file or directory 'tmpfs'");
+                expect(err.message).to.be.equal("ENOENT, No such file or "+
+                                                "directory 'tmpfs'");
                 done();
             });
         });
@@ -102,10 +103,12 @@ describe("mount", function(){
             });
         });
 
-        it("should raise error on umounting a nonexisting mountpoint", function(done){
+        it("should raise error on umounting a nonexisting mountpoint",
+        function(done){
             mount.umount("nonexistent", function(err){
                 expect(err).to.be.ok;
-                expect(err.message).to.be.equal("ENOENT, No such file or directory 'nonexistent'");
+                expect(err.message).to.be.equal("ENOENT, No such file or "+
+                                                "directory 'nonexistent'");
                 done();
             });
         });

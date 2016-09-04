@@ -132,11 +132,11 @@ function checkArguments(target, fsType, options, dataStr, callback)
   options = options || 0
   dataStr = dataStr || ''
 
-  //ensure that options is an array or number
+  // ensure that `options` is an array or number
   if(typeof options !== 'number' && options.constructor !== Array)
     throw new Error('options must be an array or a number, not '+typeof options)
 
-  //ensure that dataStr is a string or a literal object
+  // ensure that `dataStr` is a string or a literal object
   if(typeof dataStr !== 'string' && dataStr.constructor !== Object)
     throw new Error('dataStr must be a string or an object, not '+typeof dataStr)
 

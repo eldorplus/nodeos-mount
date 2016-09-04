@@ -8,6 +8,7 @@
 
 using namespace v8;
 
+
 struct Mounty {
   // All values except target are only used by mount
   std::string devFile;
@@ -17,6 +18,7 @@ struct Mounty {
   long flags;
   int error;
 };
+
 
 class MountWorker : public Nan::AsyncWorker {
 public:
@@ -54,7 +56,8 @@ public:
     };
 
     if (mounty->error > 0) {
-      argv[0] = Nan::NanErrnoException(mounty->error, "mount", "", mounty->devFile.c_str());
+      argv[0] = Nan::NanErrnoException(mounty->error, "mount", "",
+                                       mounty->devFile.c_str());
     }
 
     callback->Call(1, argv);
@@ -91,7 +94,8 @@ public:
     };
 
     if (mounty->error > 0) {
-      argv[0] = Nan::NanErrnoException(mounty->error, "umount", "", mounty->target.c_str());
+      argv[0] = Nan::NanErrnoException(mounty->error, "umount", "",
+                                       mounty->target.c_str());
     }
 
     callback->Call(1, argv);
@@ -103,7 +107,8 @@ private:
   Mounty *mounty;
 };
 
-//       0       1      2      3      4   5
+
+//       0        1       2       3        4     5
 // mount(devFile, target, fsType, options, data, cb)
 NAN_METHOD(Mount) {
   Nan::HandleScope scope;
@@ -184,13 +189,13 @@ NAN_METHOD(MountSync) {
             &s_dataStr);
   #endif
 
-  if (ret != 0) {
-    return Nan::ThrowError(Nan::NanErrnoException(errno, "mount", "", s_devFile.c_str()));
+  if (ret) {
+    return Nan::ThrowError(Nan::NanErrnoException(errno, "mount", "",
+                                                  s_devFile.c_str()));
   }
 
   info.GetReturnValue().Set(Nan::True());
 }
-
 
 NAN_METHOD(UmountSync) {
   Nan::HandleScope scope;
@@ -211,8 +216,9 @@ NAN_METHOD(UmountSync) {
             0);
   #endif
 
-  if (ret != 0) {
-    return Nan::ThrowError(Nan::NanErrnoException(errno, "umount", "", s_target.c_str()));
+  if (ret) {
+    return Nan::ThrowError(Nan::NanErrnoException(errno, "umount", "",
+                                                  s_target.c_str()));
   }
 
   info.GetReturnValue().Set(Nan::True());
