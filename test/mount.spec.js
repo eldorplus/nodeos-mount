@@ -46,7 +46,7 @@ describe("mount", function(){
         });
 
         it("should mount tmpfs filesystem", function(done){
-            mount.mount("tmpfs", TMP_DIR, "tmpfs", function(err){
+            mount.mount(TMP_DIR, "tmpfs", function(err){
                 expect(err).to.be.not.ok;
                 mount.umount(TMP_DIR, function(err){
                     done();
@@ -66,7 +66,7 @@ describe("mount", function(){
         });
 
         it("should not mount on nonexisting target", function(done){
-            mount.mount("tmpfs", "notexist", "tmpfs", function(err){
+            mount.mount("notexist", "tmpfs", function(err){
                 expect(err).to.be.ok;
                 expect(err.message).to.be.equal("ENOENT, No such file or directory 'tmpfs'");
                 done();
@@ -74,14 +74,16 @@ describe("mount", function(){
         });
 
         it("should mount tmpfs", function(done){
-            mount.mount("tmpfs", TMP_DIR, "tmpfs", expectErrToBeNotOk.bind(undefined, done));
+            mount.mount(TMP_DIR, "tmpfs",
+                        expectErrToBeNotOk.bind(undefined, done));
         });
 
         it("should mount / remount tmpfs with flags", function(done){
-            mount.mount("tmpfs", TMP_DIR, "tmpfs", ["readonly", "noexec"], function(err){
+            mount.mount(TMP_DIR, "tmpfs", ["readonly", "noexec"], function(err){
                 expect(err).to.be.not.ok;
 
-                mount.mount("tmpfs", TMP_DIR, "tmpfs", ["remount"], expectErrToBeNotOk.bind(undefined, done));
+                mount.mount(TMP_DIR, "tmpfs", ["remount"],
+                            expectErrToBeNotOk.bind(undefined, done));
             });
         });
 
@@ -93,7 +95,7 @@ describe("mount", function(){
 
     describe("#umount", function(){
         it("should umount mounting point", function(done){
-            mount.mount("tmpfs", TMP_DIR, "tmpfs", function(err){
+            mount.mount(TMP_DIR, "tmpfs", function(err){
                 expect(err).to.be.not.ok;
 
                 mount.umount(TMP_DIR, expectErrToBeNotOk.bind(undefined, done));

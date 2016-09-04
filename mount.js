@@ -87,6 +87,9 @@ function makeMountFlags(array)
 }
 
 
+/**
+ * Create a comma-separated `key=value` list from an object
+ */
 function makeMountDataStr(object)
 {
   var result = []
@@ -98,9 +101,8 @@ function makeMountDataStr(object)
 }
 
 
-function checkArguments(devFile, target, fsType, options, dataStr, callback)
+function checkArguments(target, fsType, options, dataStr, callback)
 {
-  if(devFile === undefined) throw new Error('devFile is mandatory')
   if(target  === undefined) throw new Error('target is mandatory')
 
   if(typeof fsType === 'number' || fsType instanceof Array)
@@ -111,7 +113,7 @@ function checkArguments(devFile, target, fsType, options, dataStr, callback)
     fsType   = undefined
   }
 
-  if(options != undefined && options.constructor.name === 'Object'
+  if(options != null && options.constructor.name === 'Object'
   || options instanceof Function)
   {
     callback = dataStr
@@ -141,8 +143,17 @@ function checkArguments(devFile, target, fsType, options, dataStr, callback)
   if(options instanceof Array)
     options = makeMountFlags(options)
 
+  var devFile = fsType
   if(dataStr.constructor === Object)
+  {
+    if(os.platform() === 'linux')
+    {
+      devFile = dataStr.devFile || fsType  // TODO: find correct BSD flag name
+      delete dataStr.devFile
+    }
+
     dataStr = makeMountDataStr(dataStr)
+  }
 
   return [devFile, target, fsType, options, dataStr, callback]
 }
@@ -172,9 +183,9 @@ function fsList(data)
 }
 
 
-function _mount(devFile, target, fsType, options, dataStr, cb)
+function _mount(target, fsType, options, dataStr, cb)
 {
-  var argv = checkArguments(devFile, target, fsType, options, dataStr, cb)
+  var argv = checkArguments(target, fsType, options, dataStr, cb)
 
   cb = argv[5]
 
@@ -201,16 +212,16 @@ function _mount(devFile, target, fsType, options, dataStr, cb)
       },
       function(result)
       {
-        cb(result ? null : new Error('Unknown filesystem for ' + devFile ? devFile : target))
+        cb(result ? null : new Error('Unknown filesystem for ' + target))
       })
     })
   else
     _binding.mount.apply(_binding, argv)
 }
 
-function _mountSync(devFile, target, fsType, options, dataStr)
+function _mountSync(target, fsType, options, dataStr)
 {
-  var argv = checkArguments(devFile, target, fsType, options, dataStr)
+  var argv = checkArguments(target, fsType, options, dataStr)
 
   argv.length = 5
 
@@ -224,7 +235,7 @@ function _mountSync(devFile, target, fsType, options, dataStr)
       if(_binding.mountSync.apply(_binding, argv))
         return true
 
-    throw new Error('Unknown filesystem for ' + devFile ? devFile : target)
+    throw new Error('Unknown filesystem for ' + target)
   }
 
   return _binding.mountSync.apply(_binding, argv)
