@@ -8,6 +8,9 @@ var detectSeries = require('async').detectSeries
 var _binding = require('./build/Release/mount')
 
 
+const IS_LINUX = require('os').platform() === 'linux'
+
+
 module.exports =
 {
   _binding: _binding,
@@ -146,7 +149,7 @@ function checkArguments(target, fsType, options, dataStr, callback)
   var devFile = fsType
   if(dataStr.constructor === Object)
   {
-    if(os.platform() === 'linux')
+    if(IS_LINUX)
     {
       devFile = dataStr.devFile || fsType  // TODO: find correct BSD flag name
       delete dataStr.devFile
