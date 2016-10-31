@@ -21,7 +21,7 @@
     "url": "git://github.com/NodeOS/nodeos-mount.git"
   },
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">= 4"
   },
   "author": "George Kotchlamazashvili <georgedot@gmail.com>",
   "contributors": [
