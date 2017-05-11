@@ -3,6 +3,8 @@
 
 # node-mount
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/NodeOS/nodeos-mount.svg)](https://greenkeeper.io/)
+
 Mount/umount devices from node.js
 
 Really works on linux, may work on OS X, and will never work on windows.
