@@ -56,8 +56,8 @@ public:
     };
 
     if (mounty->error > 0) {
-      argv[0] = Nan::NanErrnoException(mounty->error, "mount", "",
-                                       mounty->devFile.c_str());
+      argv[0] = Nan::ErrnoException(mounty->error, "mount", "",
+                                    mounty->devFile.c_str());
     }
 
     callback->Call(1, argv);
@@ -94,8 +94,8 @@ public:
     };
 
     if (mounty->error > 0) {
-      argv[0] = Nan::NanErrnoException(mounty->error, "umount", "",
-                                       mounty->target.c_str());
+      argv[0] = Nan::ErrnoException(mounty->error, "umount", "",
+                                    mounty->target.c_str());
     }
 
     callback->Call(1, argv);
@@ -190,8 +190,8 @@ NAN_METHOD(MountSync) {
   #endif
 
   if (ret) {
-    return Nan::ThrowError(Nan::NanErrnoException(errno, "mount", "",
-                                                  s_devFile.c_str()));
+    return Nan::ThrowError(Nan::ErrnoException(errno, "mount", "",
+                                               s_devFile.c_str()));
   }
 
   info.GetReturnValue().Set(Nan::True());
@@ -217,8 +217,8 @@ NAN_METHOD(UmountSync) {
   #endif
 
   if (ret) {
-    return Nan::ThrowError(Nan::NanErrnoException(errno, "umount", "",
-                                                  s_target.c_str()));
+    return Nan::ThrowError(Nan::ErrnoException(errno, "umount", "",
+                                               s_target.c_str()));
   }
 
   info.GetReturnValue().Set(Nan::True());
